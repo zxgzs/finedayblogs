@@ -860,10 +860,11 @@ const toggleMute = () => {
   }
 }
 
-const updateVolume = (val: number) => {
-  musicVolume.value = val
+const updateVolume = (val: number | number[]) => {
+  const volume = Array.isArray(val) ? val[0] : val
+  musicVolume.value = volume
   if (audioPlayer.value) {
-    audioPlayer.value.volume = val / 100
+    audioPlayer.value.volume = volume / 100
   }
 }
 

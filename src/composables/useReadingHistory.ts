@@ -1,4 +1,3 @@
-import { ref, watch } from 'vue'
 import { useLocalStorage } from './useLocalStorage'
 
 export interface ReadingHistoryItem {

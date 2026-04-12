@@ -13,15 +13,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-
-const props = defineProps<{
-  progress: number
-  readingTime?: number
-  visible?: boolean
-  showInfo?: boolean
-}>()
-
 withDefaults(defineProps<{
   progress: number
   readingTime?: number

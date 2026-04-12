@@ -1,0 +1,1 @@
+function h(o){const i=typeof o=="string"?new Date(o):o,a=new Date().getTime()-i.getTime(),c=Math.floor(a/1e3),n=Math.floor(c/60),r=Math.floor(n/60),t=Math.floor(r/24),e=Math.floor(t/7),s=Math.floor(t/30),f=Math.floor(t/365);return f>0?`${f}年前`:s>0?`${s}个月前`:e>0?`${e}周前`:t>0?`${t}天前`:r>0?`${r}小时前`:n>0?`${n}分钟前`:"刚刚"}export{h as f};

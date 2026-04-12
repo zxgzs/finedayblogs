@@ -14,15 +14,15 @@
       
       <!-- 分享按钮 -->
       <div class="share-buttons">
-        <el-button @click="shareToWeibo">
+        <el-button @click="() => shareToWeibo({ title: props.title, url: props.url })">
           <el-icon><Platform /></el-icon>
           微博
         </el-button>
-        <el-button @click="shareToTwitter">
+        <el-button @click="() => shareToTwitter({ title: props.title, url: props.url })">
           <el-icon><Link /></el-icon>
           Twitter
         </el-button>
-        <el-button @click="shareToLinkedIn">
+        <el-button @click="() => shareToLinkedIn({ title: props.title, url: props.url })">
           <el-icon><Link /></el-icon>
           LinkedIn
         </el-button>

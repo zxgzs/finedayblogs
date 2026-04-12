@@ -93,7 +93,6 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { articles } from '@/data/articles'
-import type { Article } from '@/data/articles'
 
 const router = useRouter()
 const collectedIds = ref<number[]>([])

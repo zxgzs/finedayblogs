@@ -28,7 +28,7 @@ export interface TOCItem {
   level: number
 }
 
-const props = defineProps<{
+defineProps<{
   items: TOCItem[]
   activeId?: string
 }>()

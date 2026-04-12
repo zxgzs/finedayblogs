@@ -1,4 +1,4 @@
-import { ref, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref } from 'vue'
 
 export interface TOCItem {
   id: string
@@ -10,7 +10,7 @@ export interface TOCItem {
 /**
  * 文章目录生成
  */
-export function useTableOfContents(contentRef: HTMLElement | null) {
+export function useTableOfContents(_contentRef: HTMLElement | null) {
   const tocList = ref<TOCItem[]>([])
   const activeToc = ref<string>('')
 
