@@ -3,6 +3,9 @@
     <!-- 搜索遮罩层 -->
     <div class="search-overlay" v-if="showSearch" @click="showSearch = false"></div>
 
+    <!-- 设置面板遮罩层 -->
+    <div v-if="showSettings" class="settings-overlay" @click="showSettings = false"></div>
+
     <!-- 极光背景 -->
     <div class="aurora-bg"></div>
 
@@ -121,13 +124,19 @@
     </div>
 
     <!-- 音乐播放器 -->
-    <div class="music-player" :class="{ open: showMusicPlayer }" @click.stop>
-      <div class="player-header">
+    <div
+      ref="musicPlayerRef"
+      class="music-player"
+      :class="{ open: showMusicPlayer, draggable: isDragging }"
+      :style="{ transform: `translate(${musicPlayerPosition.x}px, ${musicPlayerPosition.y}px)` }"
+      @click.stop
+    >
+      <div class="player-header" @mousedown="startDrag">
         <span class="player-title">
           <el-icon><Headset /></el-icon>
           背景音乐
         </span>
-        <span class="close-btn" @click="showMusicPlayer = false">
+        <span class="close-btn" @click.stop="closeMusicPlayer">
           <el-icon><Close /></el-icon>
         </span>
       </div>
@@ -163,6 +172,9 @@
           <button class="control-btn play-btn" :class="{ playing: isMusicPlaying }" @click="togglePlay">
             <el-icon v-if="!isMusicPlaying"><VideoPlay /></el-icon>
             <el-icon v-else><VideoPause /></el-icon>
+          </button>
+          <button class="control-btn stop-btn" @click="stopMusic" title="停止音乐">
+            <el-icon><Close /></el-icon>
           </button>
           <button class="control-btn" @click="nextTrack">
             <el-icon><VideoPlay /></el-icon>
@@ -233,11 +245,8 @@
       </div>
     </div>
 
-    <!-- 遮罩层 -->
-    <div class="overlay" :class="{ visible: showSettings }" @click="showSettings = false"></div>
-
     <!-- 设置面板 -->
-    <div class="settings-panel" :class="{ open: showSettings }">
+    <div class="settings-panel" :class="{ open: showSettings }" @click.stop>
       <div class="settings-header">
         <h3>
           <el-icon><Setting /></el-icon>
@@ -364,7 +373,7 @@
         <kbd>?</kbd> 帮助
       </div>
       <div class="hint-item">
-        <kbd>Esc</kbd> 关闭弹窗
+        <kbd>Esc</kbd> 关闭弹窗（音乐播放器除外）
       </div>
     </div>
 
@@ -470,7 +479,7 @@
           <button
             class="action-btn"
             :class="{ 'is-active': showMusicPlayer }"
-            @click="showMusicPlayer = !showMusicPlayer"
+            @click="openMusicPlayer"
             title="音乐播放器"
           >
             <el-icon :size="18"><Headset /></el-icon>
@@ -511,18 +520,14 @@
         </div>
       </div>
     </footer>
-
-    <!-- 伊布宠物 -->
-    <PetEevee />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, provide, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { Moon, Sunny, Lightning, Sunrise, Headset, VideoPlay, VideoPause, Bell, MuteNotification } from '@element-plus/icons-vue'
+import { Moon, Sunny, Lightning, Sunrise, Headset, VideoPlay, VideoPause, Bell, MuteNotification, Close } from '@element-plus/icons-vue'
 import { articles } from '@/data/articles'
-import PetEevee from '@/components/PetEevee.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -782,6 +787,13 @@ const isMusicPlaying = ref(false)
 const musicVolume = ref(50)
 const isMuted = ref(false)
 const currentTrackIndex = ref(0)
+const audioPlayer = ref<HTMLAudioElement | null>(null)
+const musicPlayerRef = ref<HTMLElement | null>(null)
+
+// 拖拽状态
+const isDragging = ref(false)
+const dragOffset = ref({ x: 0, y: 0 })
+const musicPlayerPosition = ref({ x: 0, y: 0 })
 
 const playlist = ref([
   { name: '宁静时光', artist: '轻音乐', url: '' },
@@ -793,31 +805,154 @@ const playlist = ref([
 const currentTrack = computed(() => playlist.value[currentTrackIndex.value] || playlist.value[0])
 
 const togglePlay = () => {
-  isMusicPlaying.value = !isMusicPlaying.value
-  if (isMusicPlaying.value) {
-    showNotification('音乐播放中', 'success')
+  if (!audioPlayer.value) {
+    audioPlayer.value = new Audio()
+    audioPlayer.value.volume = musicVolume.value / 100
+    audioPlayer.value.muted = isMuted.value
+    audioPlayer.value.loop = true
+    
+    audioPlayer.value.addEventListener('ended', () => {
+      nextTrack()
+    })
   }
+
+  if (isMusicPlaying.value) {
+    audioPlayer.value.pause()
+    isMusicPlaying.value = false
+    showNotification('音乐已暂停', 'info')
+  } else {
+    const track = currentTrack.value
+    if (track.url) {
+      audioPlayer.value.src = track.url
+      audioPlayer.value.play()
+      isMusicPlaying.value = true
+      showNotification(`正在播放: ${track.name}`, 'success')
+    } else {
+      showNotification('暂无音频文件', 'warning')
+    }
+  }
+}
+
+const stopMusic = () => {
+  // 停止音乐并重置状态
+  isMusicPlaying.value = false
+
+  if (audioPlayer.value) {
+    try {
+      audioPlayer.value.pause()
+      audioPlayer.value.currentTime = 0
+      audioPlayer.value.src = ''
+    } catch (error) {
+      console.error('停止音乐失败:', error)
+    }
+  }
+}
+
+const closeMusicPlayer = () => {
+  showMusicPlayer.value = false
+  stopMusic()
 }
 
 const toggleMute = () => {
   isMuted.value = !isMuted.value
+  if (audioPlayer.value) {
+    audioPlayer.value.muted = isMuted.value
+  }
 }
 
 const updateVolume = (val: number) => {
   musicVolume.value = val
+  if (audioPlayer.value) {
+    audioPlayer.value.volume = val / 100
+  }
 }
 
 const prevTrack = () => {
   currentTrackIndex.value = (currentTrackIndex.value - 1 + playlist.value.length) % playlist.value.length
+  loadCurrentTrack()
 }
 
 const nextTrack = () => {
   currentTrackIndex.value = (currentTrackIndex.value + 1) % playlist.value.length
+  loadCurrentTrack()
+}
+
+const loadCurrentTrack = () => {
+  if (audioPlayer.value && isMusicPlaying.value) {
+    const track = currentTrack.value
+    if (track.url) {
+      audioPlayer.value.src = track.url
+      audioPlayer.value.play()
+    }
+  }
 }
 
 const selectTrack = (index: number) => {
   currentTrackIndex.value = index
-  isMusicPlaying.value = true
+  if (audioPlayer.value && isMusicPlaying.value) {
+    const track = playlist.value[index]
+    if (track.url) {
+      audioPlayer.value.src = track.url
+      audioPlayer.value.play()
+    }
+  }
+}
+
+// 打开音乐播放器
+const openMusicPlayer = () => {
+  if (!showMusicPlayer.value) {
+    // 如果位置还没设置过，设置初始位置到右下角
+    if (musicPlayerPosition.value.x === 0 && musicPlayerPosition.value.y === 0) {
+      const playerWidth = 300
+      const playerHeight = 450 // 更准确的估计
+      musicPlayerPosition.value = {
+        x: window.innerWidth - playerWidth - 20,
+        y: window.innerHeight - playerHeight - 80
+      }
+    }
+    showMusicPlayer.value = true
+  }
+}
+
+// 音乐播放器拖拽
+const startDrag = (e: MouseEvent) => {
+  // 检查是否点击的是关闭按钮
+  const target = e.target as HTMLElement
+  if (target.closest('.close-btn')) return
+
+  if (!musicPlayerRef.value) return
+  isDragging.value = true
+
+  const rect = musicPlayerRef.value.getBoundingClientRect()
+  dragOffset.value = {
+    x: e.clientX - rect.left,
+    y: e.clientY - rect.top
+  }
+
+  document.addEventListener('mousemove', onDrag)
+  document.addEventListener('mouseup', stopDrag)
+}
+
+const onDrag = (e: MouseEvent) => {
+  if (!isDragging.value || !musicPlayerRef.value) return
+
+  const x = e.clientX - dragOffset.value.x
+  const y = e.clientY - dragOffset.value.y
+
+  // 限制在视口内
+  const maxX = window.innerWidth - musicPlayerRef.value.offsetWidth
+  const maxY = window.innerHeight - musicPlayerRef.value.offsetHeight
+
+  musicPlayerPosition.value = {
+    x: Math.max(0, Math.min(x, maxX)),
+    y: Math.max(0, Math.min(y, maxY))
+  }
+}
+
+const stopDrag = () => {
+  isDragging.value = false
+  document.removeEventListener('mousemove', onDrag)
+  document.removeEventListener('mouseup', stopDrag)
 }
 
 // 全局通知方法
@@ -893,10 +1028,24 @@ const createRipple = (x: number, y: number) => {
   ripple.style.left = x + 'px'
   ripple.style.top = y + 'px'
   document.body.appendChild(ripple)
-  
+
   setTimeout(() => {
     ripple.remove()
   }, 800)
+}
+
+// 窗口大小改变处理
+const handleWindowResize = () => {
+  if (musicPlayerRef.value && showMusicPlayer.value) {
+    const maxX = window.innerWidth - musicPlayerRef.value.offsetWidth
+    const maxY = window.innerHeight - musicPlayerRef.value.offsetHeight
+
+    // 确保播放器在视口内
+    musicPlayerPosition.value = {
+      x: Math.max(0, Math.min(musicPlayerPosition.value.x, maxX)),
+      y: Math.max(0, Math.min(musicPlayerPosition.value.y, maxY))
+    }
+  }
 }
 
 // 磁吸效果
@@ -950,7 +1099,6 @@ const handleKeydown = (e: KeyboardEvent) => {
   if (key === 'escape') {
     showSettings.value = false
     showKeyboardHints.value = false
-    showMusicPlayer.value = false
     showEnergyDetail.value = false
     return
   }
@@ -976,7 +1124,7 @@ const handleKeydown = (e: KeyboardEvent) => {
       toggleEyeCareMode()
       break
     case 'm':
-      showMusicPlayer.value = !showMusicPlayer.value
+      openMusicPlayer()
       break
     case 'p':
       // 专注模式切换
@@ -1076,6 +1224,7 @@ onMounted(() => {
   window.addEventListener('keydown', handleKeydown)
   window.addEventListener('mousemove', handleMouseMove)
   window.addEventListener('click', handleClick)
+  window.addEventListener('resize', handleWindowResize)
   
   // 初始化磁吸效果元素
   setTimeout(() => {
@@ -1088,6 +1237,13 @@ onUnmounted(() => {
   window.removeEventListener('keydown', handleKeydown)
   window.removeEventListener('mousemove', handleMouseMove)
   window.removeEventListener('click', handleClick)
+  window.removeEventListener('resize', handleWindowResize)
+
+  // 停止音乐播放并销毁 Audio 对象
+  stopMusic()
+  if (audioPlayer.value) {
+    audioPlayer.value = null
+  }
 })
 </script>
 
@@ -1150,7 +1306,7 @@ onUnmounted(() => {
   border-radius: var(--radius-lg);
   padding: 20px;
   box-shadow: var(--shadow-lg);
-  z-index: 10001;
+  z-index: 10000;
   min-width: 200px;
   animation: slideIn 0.2s ease;
 
@@ -1200,7 +1356,7 @@ onUnmounted(() => {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 10001;
+  z-index: 10000;
   background: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-xl);
@@ -1455,6 +1611,15 @@ onUnmounted(() => {
   z-index: 9998;
 }
 
+.settings-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 1999;
+  cursor: pointer;
+}
+
 @keyframes searchSlide {
   from {
     opacity: 0;
@@ -1673,8 +1838,6 @@ onUnmounted(() => {
 /* 音乐播放器 */
 .music-player {
   position: fixed;
-  bottom: 80px;
-  right: 20px;
   width: 300px;
   background: var(--card-bg);
   border: 1px solid var(--border-color);
@@ -1682,7 +1845,20 @@ onUnmounted(() => {
   box-shadow: var(--shadow-lg);
   overflow: hidden;
   z-index: 10000;
-  animation: slideUp 0.3s ease;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  user-select: none;
+
+  &.open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  &.draggable {
+    cursor: move;
+    transition: none;
+  }
 
   .player-header {
     display: flex;
@@ -1691,6 +1867,7 @@ onUnmounted(() => {
     padding: 12px 16px;
     background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(124, 58, 237, 0.1));
     border-bottom: 1px solid var(--border-color);
+    cursor: move;
 
     .player-title {
       display: flex;
@@ -1814,6 +1991,12 @@ onUnmounted(() => {
 
           &.playing {
             animation: pulse 1.5s ease infinite;
+          }
+        }
+
+        &.stop-btn {
+          &:hover {
+            background: #f56c6c;
           }
         }
       }
