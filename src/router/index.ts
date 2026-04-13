@@ -81,7 +81,7 @@ const routes: RouteRecordRaw[] = [
 ]
 
 const router = createRouter({
-  history: createWebHistory('/finedayblogs/'),
+  history: createWebHistory(),
   routes,
   scrollBehavior(_to, _from, savedPosition) {
     if (savedPosition) {
