@@ -2,5 +2,5 @@ name = "personal-blog"
 compatibility_date = "2024-04-14"
 
 [build]
-command = "YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install && yarn build"
+command = "YARN_ENABLE_IMMUTABLE_INSTALLS=false npm run install && npm run build"
 cwd = "."
