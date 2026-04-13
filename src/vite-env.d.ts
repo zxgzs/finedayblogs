@@ -8,4 +8,7 @@ declare module '*.vue' {
 
 interface Window {
   _gKeyPending: boolean
+  OML2D?: {
+    loadOml2d: (config: any) => void
+  }
 }
