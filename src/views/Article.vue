@@ -252,6 +252,11 @@
             <div class="comment-header">
               <span class="comment-author">{{ comment.author }}</span>
               <span class="comment-date">{{ comment.date }}</span>
+              <CommentAnalysis
+                :content="comment.content"
+                :author="comment.author"
+                :auto-analyze="true"
+              />
             </div>
             <p class="comment-content">{{ comment.content }}</p>
             <div class="comment-actions">
@@ -271,6 +276,11 @@
                   <div class="reply-header">
                     <span class="reply-author">{{ reply.author }}</span>
                     <span class="reply-date">{{ reply.date }}</span>
+                    <CommentAnalysis
+                      :content="reply.content"
+                      :author="reply.author"
+                      :auto-analyze="true"
+                    />
                   </div>
                   <p class="reply-content">{{ reply.content }}</p>
                   <div class="reply-actions">
@@ -328,6 +338,8 @@ import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { articles, comments, saveComments } from '@/data/articles'
 import { marked } from 'marked'
+import { createLikeNotification, createCommentNotification } from '@/data/notifications'
+import CommentAnalysis from '@/components/CommentAnalysis.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -581,6 +593,10 @@ const handleLike = () => {
   isLiked.value = !isLiked.value
   if (isLiked.value) {
     ElMessage.success('点赞成功 +1')
+    // 创建点赞通知
+    if (article.value) {
+      createLikeNotification(article.value.id, article.value.title, '当前用户')
+    }
   } else {
     ElMessage.success('取消点赞')
   }
@@ -647,6 +663,30 @@ const submitComment = async () => {
 
   comments.push(newComment)
   saveComments()
+
+  // 创建通知
+  if (article.value) {
+    if (replyingTo.value) {
+      // 回复评论的通知
+      const parentComment = comments.find(c => c.id === replyingTo.value)
+      if (parentComment) {
+        createCommentNotification(
+          article.value.id,
+          article.value.title,
+          commentAuthor.value,
+          `回复了 ${parentComment.author}: ${newComment.content}`
+        )
+      }
+    } else {
+      // 新评论的通知
+      createCommentNotification(
+        article.value.id,
+        article.value.title,
+        commentAuthor.value,
+        newComment.content
+      )
+    }
+  }
 
   commentContent.value = ''
   commentAuthor.value = ''

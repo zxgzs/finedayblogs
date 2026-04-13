@@ -238,6 +238,9 @@
         </div>
       </div>
 
+      <!-- 个性化推荐 -->
+      <RecommendationPanel />
+
       <div class="sidebar-section recent-articles">
         <div class="sidebar-title">
           <el-icon><Clock /></el-icon>
@@ -263,6 +266,7 @@ import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { articles, hotTags, categories } from '@/data/articles'
 import type { Article } from '@/data/articles'
+import RecommendationPanel from '@/components/RecommendationPanel.vue'
 
 const router = useRouter()
 

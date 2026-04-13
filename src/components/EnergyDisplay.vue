@@ -21,7 +21,9 @@ defineProps<{
   energyLevel: number
 }>()
 
-const emit = defineEmits(['click'])
+const emit = defineEmits<{
+  click: []
+}>()
 
 const clickHandler = () => {
   emit('click')

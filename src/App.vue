@@ -15,6 +15,9 @@
     <!-- 通知 -->
     <Notification ref="notificationRef" />
 
+    <!-- 通知中心（抽屉） -->
+    <NotificationCenter :show-button="false" v-model:showPanel="showNotificationPanel" />
+
     <!-- 阅读能量条详情面板 -->
     <EnergyDetailPanel
       v-model:visible="showEnergyDetail"
@@ -81,6 +84,9 @@
       v-model:show-settings="showSettings"
       v-model:show-keyboard-hints="showKeyboardHints"
       v-model:show-energy-detail="showEnergyDetail"
+      v-model:show-notification-panel="showNotificationPanel"
+      :max-energy="maxEnergy"
+      :energy-level="energyLevel"
       @toggle-theme="toggleTheme"
       @toggle-eye-care-mode="toggleEyeCareMode"
       @open-music-player="openMusicPlayer"
@@ -102,8 +108,7 @@
 
 <script lang="ts" setup>
 import {computed, onMounted, onUnmounted, provide, ref} from 'vue'
-import {useRoute, useRouter} from 'vue-router'
-import {articles} from '@/data/articles'
+import {useRouter} from 'vue-router'
 
 // 布局组件
 import AppBackground from '@/components/AppBackground.vue'
@@ -114,7 +119,7 @@ import ReadingProgressBar from '@/components/ReadingProgressBar.vue'
 
 // 功能组件
 import Notification from '@/components/Notification.vue'
-import SearchPanel from '@/components/SearchPanel.vue'
+import NotificationCenter from '@/components/NotificationCenter.vue'
 import SettingsPanel from '@/components/SettingsPanel.vue'
 import KeyboardHints from '@/components/KeyboardHints.vue'
 
@@ -123,7 +128,6 @@ import EnergyDetailPanel from '@/components/EnergyDetailPanel.vue'
 import SignDialog from '@/components/SignDialog.vue'
 import MusicPlayer from '@/components/MusicPlayer.vue'
 
-const route = useRoute()
 const router = useRouter()
 
 const notificationRef = ref()
@@ -134,6 +138,7 @@ const showReadingProgress = ref(true)
 const showToc = ref(true)
 const fontSize = ref(16)
 const enableAnimations = ref(true)
+const showNotificationPanel = ref(false)
 
 // 签到功能
 const showSignDialog = ref(false)
@@ -235,10 +240,6 @@ const checkAutoDarkMode = () => {
   }
 }
 
-const saveAutoDarkMode = () => {
-  localStorage.setItem('auto_dark_mode', String(autoDarkMode.value))
-}
-
 const toggleTheme = () => {
   isDarkMode.value = !isDarkMode.value
   localStorage.setItem('dark_mode', String(isDarkMode.value))
@@ -247,22 +248,6 @@ const toggleTheme = () => {
   } else {
     document.documentElement.classList.remove('dark-mode')
   }
-}
-
-const saveShowReadingProgress = () => {
-  localStorage.setItem('show_progress', String(showReadingProgress.value))
-}
-
-const saveFontSize = () => {
-  localStorage.setItem('font_size', String(fontSize.value))
-}
-
-const saveShowToc = () => {
-  localStorage.setItem('show_toc', String(showToc.value))
-}
-
-const saveEnableAnimations = () => {
-  localStorage.setItem('enable_animations', String(enableAnimations.value))
 }
 
 // 护眼模式

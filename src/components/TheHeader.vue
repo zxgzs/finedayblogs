@@ -24,8 +24,25 @@
       </nav>
 
       <div class="header-actions">
-        <EnergyDisplay v-if="currentEnergy > 0" @click="showEnergyDetail = !showEnergyDetail" />
-        
+        <EnergyDisplay
+          v-if="currentEnergy !== undefined && currentEnergy > 0"
+          :current-energy="currentEnergy"
+          :max-energy="maxEnergy"
+          :energy-level="energyLevel"
+          @click="showEnergyDetail = !showEnergyDetail"
+        />
+
+        <el-badge :value="unreadCount" :hidden="unreadCount === 0" :max="99">
+          <el-button
+            circle
+            :icon="Bell"
+            :type="unreadCount > 0 ? 'danger' : 'default'"
+            @click="showNotificationPanel = !showNotificationPanel"
+            class="notification-button"
+          >
+          </el-button>
+        </el-badge>
+
         <button
           :class="{ 'has-signed': hasSignedToday }"
           class="action-btn sign-btn"
@@ -103,8 +120,9 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { Edit, Moon, Sunny, Sunrise, Headset, Setting, QuestionFilled, User, Calendar } from '@element-plus/icons-vue'
+import { Edit, Moon, Sunny, Sunrise, Headset, Setting, QuestionFilled, User, Calendar, Bell, DataAnalysis, Picture } from '@element-plus/icons-vue'
 import { articles } from '@/data/articles'
+import { notifications } from '@/data/notifications'
 import EnergyDisplay from './EnergyDisplay.vue'
 import SearchPanel from './SearchPanel.vue'
 
@@ -117,11 +135,21 @@ const currentEnergy = defineModel<number>('currentEnergy')
 const hasSignedToday = defineModel<boolean>('hasSignedToday')
 const showMusicPlayer = defineModel<boolean>('showMusicPlayer')
 
+const props = defineProps<{
+  maxEnergy: number
+  energyLevel: number
+}>()
+
 const showSearch = ref(false)
 const showSignDialog = defineModel<boolean>('showSignDialog')
 const showSettings = defineModel<boolean>('showSettings')
 const showKeyboardHints = defineModel<boolean>('showKeyboardHints')
 const showEnergyDetail = defineModel<boolean>('showEnergyDetail')
+const showNotificationPanel = defineModel<boolean>('showNotificationPanel')
+
+const unreadCount = computed(() => {
+  return notifications.filter(n => !n.read).length
+})
 
 const searchQuery = ref('')
 const searchResults = computed(() => {
@@ -136,6 +164,8 @@ const searchResults = computed(() => {
 
 const navItems = [
   {path: '/', name: '首页', icon: 'HomeFilled'},
+  {path: '/dashboard', name: '数据', icon: 'DataAnalysis'},
+  {path: '/gallery', name: '画廊', icon: 'Picture'},
   {path: '/tags', name: '标签', icon: 'PriceTag'},
   {path: '/archives', name: '归档', icon: 'Folder'},
   {path: '/time-machine', name: '时光机', icon: 'Clock'},
@@ -259,6 +289,25 @@ const openMusicPlayer = () => emit('openMusicPlayer')
 
   &.has-signed {
     color: #67c23a;
+  }
+}
+
+.notification-button {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: var(--card-glass);
+  border-radius: var(--radius);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+
+  &:hover {
+    background: var(--primary-color);
+    color: white;
   }
 }
 </style>

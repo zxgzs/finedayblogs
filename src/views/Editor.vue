@@ -6,6 +6,10 @@
         {{ isEdit ? '编辑文章' : '写文章' }}
       </h1>
       <div class="header-actions">
+        <el-button @click="showDraftManager = true">
+          <el-icon><Document /></el-icon>
+          草稿箱
+        </el-button>
         <el-button @click="goBack">取消</el-button>
         <el-button type="primary" @click="saveDraft" :loading="saving">
           <el-icon><Document /></el-icon>
@@ -16,6 +20,18 @@
           发布文章
         </el-button>
       </div>
+    </div>
+
+    <!-- 自动保存状态 -->
+    <div v-if="autoSaving || lastSaved" class="save-status">
+      <el-tag v-if="autoSaving" type="warning" size="small">
+        <el-icon class="is-loading"><Loading /></el-icon>
+        正在自动保存...
+      </el-tag>
+      <el-tag v-else-if="lastSaved" type="info" size="small">
+        <el-icon><Clock /></el-icon>
+        已于 {{ formatTime(lastSaved) }} 保存
+      </el-tag>
     </div>
 
     <div class="editor-form">
@@ -67,87 +83,69 @@
 
         <div class="form-row">
           <el-form-item label="摘要">
-            <el-input
-              v-model="formData.summary"
-              type="textarea"
-              :rows="2"
-              placeholder="请输入文章摘要（可选）"
-              maxlength="200"
-              show-word-limit
-            />
+            <div class="summary-input-wrapper">
+              <el-input
+                v-model="formData.summary"
+                type="textarea"
+                :rows="2"
+                placeholder="请输入文章摘要（可选）"
+                maxlength="200"
+                show-word-limit
+              />
+              <AISummaryGenerator
+                :content="formData.content"
+                @update:summary="handleUpdateSummary"
+                @update:keywords="handleUpdateKeywords"
+              />
+            </div>
           </el-form-item>
         </div>
 
         <div class="form-row">
           <el-form-item label="正文" prop="content">
-            <div class="editor-toolbar">
-              <button type="button" class="tool-btn" @click="insertFormat('**', '**')" title="加粗">
-                <el-icon><Edit /></el-icon>
-              </button>
-              <button type="button" class="tool-btn" @click="insertFormat('*', '*')" title="斜体">
-                <el-icon><Timer /></el-icon>
-              </button>
-              <button type="button" class="tool-btn" @click="insertLine('# ')" title="标题">
-                <el-icon><Tickets /></el-icon>
-              </button>
-              <button type="button" class="tool-btn" @click="insertLine('- ')" title="列表">
-                <el-icon><List /></el-icon>
-              </button>
-              <button type="button" class="tool-btn" @click="insertCode()" title="代码">
-                <el-icon><Document /></el-icon>
-              </button>
-              <button type="button" class="tool-btn" @click="insertLink()" title="链接">
-                <el-icon><Link /></el-icon>
-              </button>
-              <button type="button" class="tool-btn" @click="insertImage()" title="图片">
-                <el-icon><Picture /></el-icon>
-              </button>
-              <button type="button" class="tool-btn" @click="insertQuote()" title="引用">
-                <el-icon><ChatLineSquare /></el-icon>
-              </button>
-            </div>
-            <textarea
-              ref="editorRef"
-              v-model="formData.content"
-              class="editor-content"
-              placeholder="使用 Markdown 编写文章..."
-              @keydown.tab.prevent="handleTab"
-            ></textarea>
-          </el-form-item>
-        </div>
-
-        <div class="form-row">
-          <el-form-item label="预览">
-            <div class="content-preview" v-html="renderedPreview"></div>
+            <EnhancedMarkdownEditor v-model="formData.content" />
           </el-form-item>
         </div>
       </el-form>
     </div>
+
+    <!-- 草稿管理器弹窗 -->
+    <el-drawer
+      v-model="showDraftManager"
+      title="草稿箱"
+      direction="rtl"
+      size="400px"
+    >
+      <DraftManager @load="handleLoadDraft" />
+    </el-drawer>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { articles } from '@/data/articles'
-import { marked } from 'marked'
+import { useAutoSave, type DraftData } from '@/composables/useAutoSave'
+import DraftManager from '@/components/DraftManager.vue'
+import EnhancedMarkdownEditor from '@/components/EnhancedMarkdownEditor.vue'
+import AISummaryGenerator from '@/components/AISummaryGenerator.vue'
 
 const router = useRouter()
 const route = useRoute()
 
-const editorRef = ref<HTMLTextAreaElement>()
 const formRef = ref()
 const saving = ref(false)
 const publishing = ref(false)
+const showDraftManager = ref(false)
 
 const articleId = computed(() => Number(route.params.id))
 const isEdit = computed(() => !!articleId.value)
 
-const formData = reactive({
+const formData = reactive<DraftData>({
   title: '',
   category: '',
-  tags: [] as string[],
+  tags: [],
   summary: '',
   content: '',
   isTop: false
@@ -159,126 +157,52 @@ const formRules = {
   content: [{ required: true, message: '请输入文章内容', trigger: 'blur' }]
 }
 
-const renderedPreview = computed(() => {
-  if (!formData.content) return '<p style="color: var(--text-muted);">预览区域</p>'
-  return marked(formData.content)
-})
-
-const insertFormat = (before: string, after: string) => {
-  const textarea = editorRef.value
-  if (!textarea) return
-
-  const start = textarea.selectionStart
-  const end = textarea.selectionEnd
-  const text = textarea.value
-  const selected = text.substring(start, end)
-
-  formData.content = text.substring(0, start) + before + selected + after + text.substring(end)
-
-  setTimeout(() => {
-    textarea.focus()
-    textarea.setSelectionRange(start + before.length, end + before.length)
-  }, 0)
-}
-
-const insertLine = (prefix: string) => {
-  const textarea = editorRef.value
-  if (!textarea) return
-
-  const start = textarea.selectionStart
-  const text = textarea.value
-
-  formData.content = text.substring(0, start) + '\n' + prefix + text.substring(start)
-
-  setTimeout(() => {
-    textarea.focus()
-    textarea.setSelectionRange(start + prefix.length + 1, start + prefix.length + 1)
-  }, 0)
-}
-
-const insertCode = () => {
-  const textarea = editorRef.value
-  if (!textarea) return
-
-  const start = textarea.selectionStart
-  const end = textarea.selectionEnd
-  const text = textarea.value
-  const selected = text.substring(start, end)
-
-  const code = selected ? `\n\`\`\`\n${selected}\n\`\`\`\n` : '\n```\n\n```\n'
-  formData.content = text.substring(0, start) + code + text.substring(end)
-}
-
-const insertLink = () => {
-  const url = prompt('请输入链接地址:')
-  if (!url) return
-
-  const textarea = editorRef.value
-  if (!textarea) return
-
-  const start = textarea.selectionStart
-  const end = textarea.selectionEnd
-  const text = textarea.value
-  const selected = text.substring(start, end) || '链接文字'
-
-  formData.content = text.substring(0, start) + `[${selected}](${url})` + text.substring(end)
-}
-
-const insertImage = () => {
-  const url = prompt('请输入图片地址:')
-  if (!url) return
-
-  const textarea = editorRef.value
-  if (!textarea) return
-
-  const start = textarea.selectionStart
-  const text = textarea.value
-
-  formData.content = text.substring(0, start) + `![图片](${url})` + text.substring(start)
-}
-
-const insertQuote = () => {
-  const textarea = editorRef.value
-  if (!textarea) return
-
-  const start = textarea.selectionStart
-  const end = textarea.selectionEnd
-  const text = textarea.value
-  const selected = text.substring(start, end) || '引用内容'
-
-  formData.content = text.substring(0, start) + `\n> ${selected}\n` + text.substring(end)
-}
-
-const handleTab = (_e: KeyboardEvent) => {
-  const textarea = editorRef.value
-  if (!textarea) return
-
-  const start = textarea.selectionStart
-  const text = textarea.value
-
-  formData.content = text.substring(0, start) + '  ' + text.substring(start)
-
-  setTimeout(() => {
-    textarea.setSelectionRange(start + 2, start + 2)
-  }, 0)
-}
+// 使用自动保存功能
+const {
+  isSaving: autoSaving,
+  lastSaved,
+  manualSave,
+  getDrafts,
+  loadDraft: loadAutoDraft,
+  clearCurrentDraft
+} = useAutoSave(formData, articleId)
 
 const goBack = () => {
-  router.push('/admin')
+  if (formData.title || formData.content) {
+    ElMessageBox.confirm('当前文章未保存，确定要离开吗？', '提示', {
+      confirmButtonText: '离开',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }).then(() => {
+      router.push('/admin')
+    }).catch(() => {
+      // 用户取消
+    })
+  } else {
+    router.push('/admin')
+  }
 }
 
 const saveDraft = async () => {
   try {
     await formRef.value?.validateField('title')
     saving.value = true
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    localStorage.setItem('article_draft', JSON.stringify(formData))
-    ElMessage.success('草稿保存成功')
+
+    await manualSave()
   } catch {
     ElMessage.warning('请填写标题')
   } finally {
     saving.value = false
   }
+}
+
+const handleUpdateSummary = (summary: string) => {
+  formData.summary = summary
+}
+
+const handleUpdateKeywords = (keywords: string[]) => {
+  // 合并AI生成的关键词到现有标签
+  formData.tags = [...new Set([...formData.tags, ...keywords])]
 }
 
 const publishArticle = async () => {
@@ -322,7 +246,7 @@ const publishArticle = async () => {
       ElMessage.success('文章发布成功')
     }
 
-    localStorage.removeItem('article_draft')
+    clearCurrentDraft()
     router.push('/admin')
   } catch {
     ElMessage.warning('请完善文章信息')
@@ -331,12 +255,36 @@ const publishArticle = async () => {
   }
 }
 
+// 从草稿管理器加载草稿
+const handleLoadDraft = (draft: DraftData) => {
+  Object.assign(formData, draft)
+  showDraftManager.value = false
+  ElMessage.success('草稿已加载')
+}
+
+// 格式化时间
+const formatTime = (date: Date): string => {
+  const now = new Date()
+  const diff = now.getTime() - date.getTime()
+  const seconds = Math.floor(diff / 1000)
+
+  if (seconds < 60) return '刚刚'
+  if (seconds < 3600) return `${Math.floor(seconds / 60)}分钟前`
+  if (seconds < 86400) return `${Math.floor(seconds / 3600)}小时前`
+  return date.toLocaleString('zh-CN')
+}
+
 onMounted(() => {
-  const draft = localStorage.getItem('article_draft')
-  if (draft && !isEdit.value) {
-    Object.assign(formData, JSON.parse(draft))
+  // 优先加载自动保存的草稿
+  const savedDrafts = getDrafts()
+  const draftId = articleId.value ? String(articleId.value) : `draft_${Date.now()}`
+
+  if (savedDrafts[draftId] && !isEdit.value) {
+    Object.assign(formData, savedDrafts[draftId])
+    ElMessage.info('已加载上次编辑的草稿')
   }
 
+  // 如果是编辑模式，加载现有文章
   if (isEdit.value) {
     const article = articles.find(a => a.id === articleId.value)
     if (article) {
@@ -362,7 +310,7 @@ onMounted(() => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 24px;
+    margin-bottom: 16px;
     padding-bottom: 16px;
     border-bottom: 1px solid var(--border-color);
 
@@ -372,6 +320,13 @@ onMounted(() => {
       align-items: center;
       gap: 12px;
     }
+  }
+
+  .save-status {
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
   }
 
   .editor-form {
@@ -391,60 +346,10 @@ onMounted(() => {
         }
       }
 
-      .editor-toolbar {
+      .summary-input-wrapper {
         display: flex;
-        gap: 8px;
-        padding: 12px;
-        background: var(--bg-color);
-        border-radius: 8px 8px 0 0;
-        flex-wrap: wrap;
-
-        .tool-btn {
-          padding: 8px 12px;
-          border: none;
-          background: var(--card-bg);
-          border-radius: 4px;
-          cursor: pointer;
-          transition: all 0.3s;
-          display: flex;
-          align-items: center;
-          gap: 4px;
-
-          &:hover {
-            background: var(--primary-color);
-            color: white;
-          }
-        }
-      }
-
-      .editor-content {
-        width: 100%;
-        min-height: 400px;
-        padding: 16px;
-        border: 1px solid var(--border-color);
-        border-top: none;
-        border-radius: 0 0 8px 8px;
-        font-family: 'Fira Code', monospace;
-        font-size: 14px;
-        line-height: 1.6;
-        resize: vertical;
-        background: var(--card-bg);
-        color: var(--text-primary);
-
-        &:focus {
-          outline: none;
-          border-color: var(--primary-color);
-        }
-      }
-
-      .content-preview {
-        min-height: 200px;
-        padding: 16px;
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        background: var(--bg-color);
-        font-size: 15px;
-        line-height: 1.8;
+        flex-direction: column;
+        gap: 12px;
       }
     }
   }

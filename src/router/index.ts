@@ -10,6 +10,10 @@ import History from '@/views/History.vue'
 import Favorites from '@/views/Favorites.vue'
 import Tags from '@/views/Tags.vue'
 import TimeMachine from '@/views/TimeMachine.vue'
+import Series from '@/views/Series.vue'
+import SeriesDetail from '@/views/SeriesDetail.vue'
+import Dashboard from '@/views/Dashboard.vue'
+import Gallery from '@/views/Gallery.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -59,6 +63,30 @@ const routes: RouteRecordRaw[] = [
     name: 'TimeMachine',
     component: TimeMachine,
     meta: { title: '博客时光机' }
+  },
+  {
+    path: '/series',
+    name: 'Series',
+    component: Series,
+    meta: { title: '文章系列' }
+  },
+  {
+    path: '/series/:id',
+    name: 'SeriesDetail',
+    component: SeriesDetail,
+    meta: { title: '系列详情' }
+  },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: Dashboard,
+    meta: { title: '数据仪表板' }
+  },
+  {
+    path: '/gallery',
+    name: 'Gallery',
+    component: Gallery,
+    meta: { title: '内容画廊' }
   },
   {
     path: '/contact',
