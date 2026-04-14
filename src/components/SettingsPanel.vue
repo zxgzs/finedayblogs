@@ -155,6 +155,8 @@ const saveAnimations = () => {
   transform: translate(-50%, -50%) scale(0.9);
   z-index: 2000;
   background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-lg);

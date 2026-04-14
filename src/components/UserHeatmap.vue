@@ -33,9 +33,9 @@
         <span class="legend-label">低</span>
         <div class="legend-bar">
           <div class="legend-colors">
-            <div class="legend-color" style="background: rgba(64, 158, 255, 0.2)"></div>
-            <div class="legend-color" style="background: rgba(64, 158, 255, 0.5)"></div>
-            <div class="legend-color" style="background: rgba(64, 158, 255, 0.8)"></div>
+            <div class="legend-color" style="background: rgba(99, 102, 241, 0.2)"></div>
+            <div class="legend-color" style="background: rgba(99, 102, 241, 0.5)"></div>
+            <div class="legend-color" style="background: rgba(99, 102, 241, 0.8)"></div>
           </div>
         </div>
         <span class="legend-label">高</span>
@@ -132,7 +132,7 @@ onUnmounted(() => {
     .heatmap-region {
       position: relative;
       padding: 24px;
-      background: linear-gradient(135deg, rgba(64, 158, 255, 0.1) 0%, rgba(64, 158, 255, 0.05) 100%);
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(99, 102, 241, 0.05) 100%);
       border: 2px solid var(--primary-color);
       border-radius: 12px;
       transition: all 0.3s;
@@ -152,7 +152,7 @@ onUnmounted(() => {
 
       &:hover {
         transform: scale(1.05);
-        box-shadow: 0 4px 12px rgba(64, 158, 255, 0.3);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
 
         &::before {
           opacity: 1;

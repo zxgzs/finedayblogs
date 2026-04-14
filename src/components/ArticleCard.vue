@@ -114,6 +114,8 @@ const handleCollect = () => {
 <style scoped lang="scss">
 .article-card {
   background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   padding: 24px;
@@ -197,14 +199,15 @@ const handleCollect = () => {
 
 .tag {
   padding: 4px 12px;
-  background: rgba(0, 212, 255, 0.1);
+  background: rgba(99, 102, 241, 0.08);
   color: var(--primary-color);
   border-radius: var(--radius-full);
   font-size: 0.75rem;
   transition: all 0.2s;
-  
+
   &:hover {
-    background: rgba(0, 212, 255, 0.2);
+    background: var(--primary-color);
+    color: white;
   }
 }
 

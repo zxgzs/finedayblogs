@@ -262,10 +262,13 @@ const goToArticle = (id: number) => {
     justify-content: center;
     gap: 16px;
     padding: 32px;
-    background: var(--card-bg);
+    background: var(--card-higher-opacity);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-radius: var(--radius-xl);
     border: 1px solid var(--border-color);
     margin-bottom: 32px;
+    box-shadow: var(--shadow);
 
     .tag-item {
       display: inline-flex;
@@ -280,9 +283,9 @@ const goToArticle = (id: number) => {
 
       &:hover, &.active {
         transform: scale(1.1);
-        box-shadow: 0 4px 20px rgba(0, 212, 255, 0.3);
+        box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
         border-color: var(--primary-color) !important;
-        background-color: rgba(0, 212, 255, 0.2) !important;
+        background-color: rgba(99, 102, 241, 0.2) !important;
         color: var(--primary-color) !important;
         opacity: 1 !important;
       }
@@ -290,7 +293,7 @@ const goToArticle = (id: number) => {
       .tag-count {
         font-size: 0.75em;
         padding: 2px 6px;
-        background: rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.1);
         border-radius: 10px;
       }
     }
@@ -319,12 +322,15 @@ const goToArticle = (id: number) => {
       gap: 16px;
 
       .article-item {
-        background: var(--card-bg);
+        background: var(--card-higher-opacity);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
         border-radius: var(--radius-lg);
         padding: 20px 24px;
         border: 1px solid var(--border-color);
         cursor: pointer;
         transition: all 0.3s ease;
+        box-shadow: var(--shadow);
 
         &:hover {
           border-color: var(--primary-color);
@@ -390,11 +396,14 @@ const goToArticle = (id: number) => {
       }
 
       .stat-card {
-        background: var(--card-bg);
+        background: var(--card-higher-opacity);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
         border-radius: var(--radius-lg);
         padding: 20px;
         text-align: center;
         border: 1px solid var(--border-color);
+        box-shadow: var(--shadow);
 
         .stat-value {
           font-size: 28px;
@@ -425,10 +434,13 @@ const goToArticle = (id: number) => {
     }
 
     .tag-ranking {
-      background: var(--card-bg);
+      background: var(--card-higher-opacity);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border-radius: var(--radius-xl);
       padding: 24px;
       border: 1px solid var(--border-color);
+      box-shadow: var(--shadow);
 
       .rank-item {
         display: flex;
@@ -445,7 +457,7 @@ const goToArticle = (id: number) => {
 
         &:hover {
           padding-left: 8px;
-          background: rgba(0, 212, 255, 0.05);
+          background: rgba(99, 102, 241, 0.05);
         }
 
         .rank-number {

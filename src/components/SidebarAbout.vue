@@ -50,9 +50,12 @@ withDefaults(defineProps<{
 .about-me {
   text-align: center;
   padding: 24px;
-  background: var(--card-glass);
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-color);
+  box-shadow: var(--shadow);
 }
 
 .avatar {
@@ -94,7 +97,7 @@ withDefaults(defineProps<{
   transition: all 0.3s ease;
 
   &:hover {
-    background: rgba(0, 212, 255, 0.1);
+    background: rgba(99, 102, 241, 0.08);
   }
 
   .stat-value {

@@ -104,7 +104,7 @@ const vote = (id: number) => {
 
   &:hover {
     border-color: var(--primary-color);
-    background: rgba(0, 212, 255, 0.1);
+    background: rgba(99, 102, 241, 0.08);
   }
 
   &.selected {

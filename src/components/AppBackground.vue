@@ -197,17 +197,18 @@ onUnmounted(() => {
   background: var(--primary-color);
   border-radius: 50%;
   animation: twinkle var(--duration, 3s) ease-in-out infinite;
-  box-shadow: 0 0 6px var(--primary-color);
+  box-shadow: 0 0 4px var(--primary-color);
+  opacity: 0.4;
 }
 
 @keyframes twinkle {
   0%, 100% {
-    opacity: 0.3;
+    opacity: 0.2;
     transform: scale(1);
   }
   50% {
-    opacity: 1;
-    transform: scale(1.5);
+    opacity: 0.6;
+    transform: scale(1.3);
   }
 }
 
@@ -226,7 +227,7 @@ onUnmounted(() => {
 
 /* 深色模式下的光效 */
 .app-background.dark-mode .cursor-glow {
-  background: radial-gradient(circle, rgba(0, 102, 255, 0.15) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(129, 140, 248, 0.12) 0%, transparent 70%);
 }
 
 /* 护眼模式下的光效 */

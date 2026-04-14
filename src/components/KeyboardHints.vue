@@ -66,6 +66,8 @@ const visible = defineModel<boolean>('visible')
   top: 80px;
   right: 20px;
   background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   padding: 20px;

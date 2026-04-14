@@ -382,7 +382,7 @@ const openLink = (url: string) => {
 
       .category-count {
         padding: 2px 8px;
-        background: rgba(0, 0, 0, 0.1);
+        background: rgba(0, 0, 0, 0.05);
         border-radius: 10px;
         font-size: 12px;
       }

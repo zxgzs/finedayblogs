@@ -97,11 +97,14 @@ const goToSeries = () => {
 <style scoped lang="scss">
 .series-card {
   background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-radius: 12px;
   overflow: hidden;
   cursor: pointer;
   transition: all 0.3s;
   box-shadow: var(--shadow);
+  border: 1px solid var(--border-color);
 
   &:hover {
     transform: translateY(-4px);

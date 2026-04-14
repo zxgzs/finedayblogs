@@ -599,7 +599,7 @@ onMounted(() => {
 	window.addEventListener('resize', handleWindowResize)
 
 	if (window.OML2D) {
-		let models = ['my_shuaya_mai/my_shuaya_mai.model3.json']
+		let models = ['HK416-2-destroy/model.json']
 		window.OML2D.loadOml2d({
 			menus: {},
 			models: models.map(model => {
@@ -660,13 +660,16 @@ onUnmounted(() => {
 
 /* 护眼模式 */
 :global(.eye-care-mode) {
-	--bg-color: #fdf6e3 !important;
-	--text-primary: #5c4d3c !important;
-	--text-secondary: #7a6b5a !important;
-	--text-muted: #9a8b7a !important;
-	--card-bg: #fff8dc !important;
-	--border-color: #e6d5b8 !important;
+	--bg-color: #faf5e6 !important;
+	--bg-secondary: #f5edd8 !important;
+	--text-primary: #4a4036 !important;
+	--text-secondary: #6b5d52 !important;
+	--text-muted: #9a8a7d !important;
+	--card-bg: rgba(255, 251, 235, 0.5) !important;
+	--card-glass: rgba(255, 251, 235, 0.4) !important;
+	--card-higher-opacity: rgba(255, 251, 235, 0.85) !important;
+	--border-color: rgba(212, 160, 86, 0.2) !important;
 	--primary-color: #d4a056 !important;
-	background: #fdf6e3 !important;
+	background: #faf5e6 !important;
 }
 </style>

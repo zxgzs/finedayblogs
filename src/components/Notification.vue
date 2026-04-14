@@ -55,6 +55,8 @@ defineExpose({ show })
   right: 20px;
   padding: 12px 20px;
   background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);

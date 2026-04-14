@@ -42,7 +42,9 @@ withDefaults(defineProps<{
   align-items: center;
   gap: 12px;
   padding: 14px 16px;
-  background: var(--card-glass);
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   color: var(--text-primary);
@@ -67,7 +69,7 @@ withDefaults(defineProps<{
 
   &:hover {
     border-color: var(--primary-color);
-    background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(124, 58, 237, 0.1));
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
     transform: translateX(4px);
 
     .arrow {

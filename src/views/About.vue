@@ -382,7 +382,7 @@ const timeline = [
             border-color: transparent;
 
             .contact-icon {
-              background: rgba(255, 255, 255, 0.2);
+              background: rgba(255, 255, 255, 0.1);
             }
 
             .contact-info {

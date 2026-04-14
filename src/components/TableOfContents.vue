@@ -46,13 +46,15 @@ const handleClick = (id: string) => {
 .toc-container {
   position: sticky;
   top: 100px;
-  background: var(--card-glass);
-  backdrop-filter: blur(10px);
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   padding: 16px;
   max-height: calc(100vh - 120px);
   overflow-y: auto;
+  box-shadow: var(--shadow);
 }
 
 .toc-header {
@@ -82,12 +84,12 @@ const handleClick = (id: string) => {
   font-size: 0.875rem;
   
   &:hover {
-    background: rgba(0, 212, 255, 0.1);
+    background: rgba(99, 102, 241, 0.08);
     color: var(--primary-color);
   }
-  
+
   &.active {
-    background: rgba(0, 212, 255, 0.15);
+    background: rgba(99, 102, 241, 0.15);
     color: var(--primary-color);
     font-weight: 500;
   }

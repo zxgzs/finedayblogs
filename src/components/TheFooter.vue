@@ -29,21 +29,11 @@ const showNotification = (message: string, type: 'success' | 'warning' | 'error'
   right: 0;
   width: 100%;
   background: var(--card-glass);
-  backdrop-filter: blur(10px);
-  border-top: 3px solid;
-  border-image: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--accent-color)) 1;
-  padding: 8px 0;
-  box-shadow: 0 -4px 20px rgba(255, 107, 157, 0.2);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid var(--border-color);
+  padding: 10px 0;
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.05);
   z-index: 9998;
-}
-
-.footer::before {
-  content: '💕';
-  position: absolute;
-  top: -12px;
-  right: 20px;
-  font-size: 20px;
-  animation: bounce 2s ease-in-out infinite;
 }
 
 .footer-content {

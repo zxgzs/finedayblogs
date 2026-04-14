@@ -79,6 +79,8 @@ const formattedValue = computed(() => {
   gap: 16px;
   padding: 20px;
   background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-radius: 12px;
   box-shadow: var(--shadow);
   transition: all 0.3s;

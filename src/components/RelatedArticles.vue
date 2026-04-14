@@ -64,13 +64,16 @@ defineEmits<{
 }
 
 .related-card {
-  background: var(--card-glass);
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-color);
   border-radius: var(--radius);
   padding: 16px;
   cursor: pointer;
   transition: all 0.2s;
-  
+  box-shadow: var(--shadow);
+
   &:hover {
     border-color: var(--primary-color);
     transform: translateY(-2px);

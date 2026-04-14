@@ -59,8 +59,11 @@ const filterByCategory = (category: string) => {
   padding: 24px;
   border-radius: var(--radius-lg);
   margin-bottom: 24px;
-  background: var(--card-glass);
-  backdrop-filter: blur(10px);
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow);
 }
 
 .search-bar {

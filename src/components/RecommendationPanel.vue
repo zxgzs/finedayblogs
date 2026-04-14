@@ -181,10 +181,13 @@ onMounted(() => {
 <style scoped lang="scss">
 .recommendation-panel {
   background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-radius: 12px;
   overflow: hidden;
   margin-bottom: 24px;
   border: 1px solid var(--border-color);
+  box-shadow: var(--shadow);
 
   .panel-header {
     padding: 16px;
@@ -234,10 +237,13 @@ onMounted(() => {
         margin-bottom: 12px;
         cursor: pointer;
         transition: all 0.3s;
-        background: var(--bg-color);
+        background: var(--card-bg);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--border-color);
 
         &:hover {
-          background: var(--primary-color-light);
+          background: rgba(99, 102, 241, 0.08);
           transform: translateX(4px);
 
           .article-title {

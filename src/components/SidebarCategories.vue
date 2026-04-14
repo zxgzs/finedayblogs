@@ -45,10 +45,13 @@ const selectCategory = (name: string) => {
 <style scoped>
 .categories {
   padding: 20px;
-  background: var(--card-glass);
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-color);
   margin-bottom: 24px;
+  box-shadow: var(--shadow);
 }
 
 .sidebar-title {
@@ -83,12 +86,13 @@ const selectCategory = (name: string) => {
   transition: all 0.3s;
 
   &:hover {
-    background: rgba(0, 212, 255, 0.1);
+    background: rgba(99, 102, 241, 0.08);
   }
 
   &.active {
-    background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(124, 58, 237, 0.2));
-    border: 1px solid var(--primary-color);
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border: 1px solid transparent;
   }
 
   .category-name {

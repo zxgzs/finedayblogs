@@ -47,9 +47,13 @@ const goToArticle = (id: number) => {
 <style scoped>
 .hot-articles {
   padding: 20px;
-  background: var(--card-glass);
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-color);
+  box-shadow: var(--shadow);
+}
   margin-bottom: 24px;
 }
 

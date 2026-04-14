@@ -39,9 +39,13 @@ const goToArticle = (id: number) => {
 <style scoped>
 .recent-articles {
   padding: 20px;
-  background: var(--card-glass);
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-color);
+  box-shadow: var(--shadow);
+}
 }
 
 .sidebar-title {
@@ -70,7 +74,7 @@ const goToArticle = (id: number) => {
   transition: all 0.3s;
 
   &:hover {
-    background: rgba(0, 212, 255, 0.1);
+    background: rgba(99, 102, 241, 0.08);
   }
 
   .article-title {
