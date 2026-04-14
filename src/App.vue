@@ -76,6 +76,9 @@
 		<!-- 键盘快捷键提示 -->
 		<KeyboardHints v-model:visible="showKeyboardHints"/>
 
+		<!-- AI 助手 -->
+		<AIAssistant />
+
 		<!-- 头部导航 -->
 		<TheHeader
 			v-model:current-energy="currentEnergy"
@@ -126,6 +129,7 @@ import Notification from '@/components/Notification.vue'
 import NotificationCenter from '@/components/NotificationCenter.vue'
 import SettingsPanel from '@/components/SettingsPanel.vue'
 import KeyboardHints from '@/components/KeyboardHints.vue'
+import AIAssistant from '@/components/AIAssistant.vue'
 
 // 游戏化组件
 import EnergyDetailPanel from '@/components/EnergyDetailPanel.vue'

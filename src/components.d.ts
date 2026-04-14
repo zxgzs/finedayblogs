@@ -9,6 +9,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AIAnalysisConfig: typeof import('./components/AIAnalysisConfig.vue')['default']
+    AIAssistant: typeof import('./components/AIAssistant.vue')['default']
     AISummaryGenerator: typeof import('./components/AISummaryGenerator.vue')['default']
     AnalyticsChart: typeof import('./components/AnalyticsChart.vue')['default']
     AnimeDecorations: typeof import('./components/AnimeDecorations.vue')['default']

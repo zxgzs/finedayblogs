@@ -34,6 +34,9 @@ export { default as MoodVote } from './MoodVote.vue'
 export { default as NotificationCenter } from './NotificationCenter.vue'
 export { default as RecommendationPanel } from './RecommendationPanel.vue'
 
+// AI 助手
+export { default as AIAssistant } from './AIAssistant.vue'
+
 // AI分析组件
 export { default as AIAnalysisConfig } from './AIAnalysisConfig.vue'
 export { default as AISummaryGenerator } from './AISummaryGenerator.vue'
