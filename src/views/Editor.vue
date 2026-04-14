@@ -239,7 +239,7 @@ const publishArticle = async () => {
         views: 0,
         likes: 0,
         collects: 0,
-        author: '博主',
+        author: '晴天',
         isTop: formData.isTop
       }
       articles.unshift(newArticle)

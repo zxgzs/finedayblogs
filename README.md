@@ -71,8 +71,8 @@ src/
 复制 `.env.example` 为 `.env` 并修改配置：
 
 ```bash
-VITE_BLOG_TITLE=我的个人博客
-VITE_BLOG_AUTHOR=博主
+VITE_BLOG_TITLE=晴天的博客
+VITE_BLOG_AUTHOR=晴天
 VITE_API_BASE_URL=https://api.example.com
 ```
 

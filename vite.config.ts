@@ -28,8 +28,8 @@ export default defineConfig(({ mode }) => {
     },
     // 环境变量注入
     define: {
-      __APP_ENV__: JSON.stringify(env.VITE_BLOG_TITLE || '我的个人博客'),
-      __APP_AUTHOR__: JSON.stringify(env.VITE_BLOG_AUTHOR || '博主')
+      __APP_ENV__: JSON.stringify(env.VITE_BLOG_TITLE || '晴天的博客'),
+      __APP_AUTHOR__: JSON.stringify(env.VITE_BLOG_AUTHOR || '晴天')
     },
     // 构建优化
     build: {

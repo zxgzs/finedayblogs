@@ -45,7 +45,7 @@ const readArticleIds = computed(() => {
 })
 
 onMounted(() => {
-  setPageMeta('文章系列 - 我的博客', '系统化学习系列教程，循序渐进掌握技术知识')
+  setPageMeta('文章系列 - 晴天的博客', '系统化学习系列教程，循序渐进掌握技术知识')
 })
 </script>
 

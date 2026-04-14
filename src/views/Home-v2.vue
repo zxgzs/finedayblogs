@@ -113,7 +113,7 @@ const likedArticles = ref<number[]>([])
 const collectedArticles = ref<number[]>([])
 
 // 作者信息
-const authorName = ref('技术博主')
+const authorName = ref('晴天')
 const authorBio = ref('热爱技术,专注前端开发,分享学习心得与实战经验')
 const authorStats = computed(() => [
   { value: articles.length, label: '文章' },

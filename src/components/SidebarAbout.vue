@@ -34,7 +34,7 @@ withDefaults(defineProps<{
   bio: string
   stats: Array<{ value: number, label: string }>
 }>(), {
-  name: '技术博主',
+  name: '晴天',
   bio: '热爱技术,专注前端开发,分享学习心得与实战经验',
   stats: () => [],
   socialLinks: () => [

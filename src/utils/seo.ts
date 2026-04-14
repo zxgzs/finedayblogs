@@ -14,7 +14,7 @@ export interface MetaInfo {
  */
 export function setPageMeta(meta: MetaInfo) {
   // 设置标题
-  document.title = `${meta.title} - 我的个人博客`
+  document.title = `${meta.title} - 晴天的博客`
 
   // 设置 description
   updateMetaTag('description', meta.description || '一个现代化的个人博客，分享前端开发经验和技术文章')

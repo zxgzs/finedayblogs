@@ -11,6 +11,7 @@ declare module 'vue' {
     AIAnalysisConfig: typeof import('./components/AIAnalysisConfig.vue')['default']
     AISummaryGenerator: typeof import('./components/AISummaryGenerator.vue')['default']
     AnalyticsChart: typeof import('./components/AnalyticsChart.vue')['default']
+    AnimeDecorations: typeof import('./components/AnimeDecorations.vue')['default']
     AppBackground: typeof import('./components/AppBackground.vue')['default']
     ArticleCard: typeof import('./components/ArticleCard.vue')['default']
     ArticleImpact: typeof import('./components/ArticleImpact.vue')['default']

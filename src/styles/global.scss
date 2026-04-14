@@ -1,44 +1,44 @@
-/* 科技感博客主题色 */
+/* 二次元主题色 */
 :root {
-  /* 主色调 - 赛博朋克渐变 */
-  --primary-color: #00d4ff;
-  --primary-light: #00f5ff;
-  --primary-dark: #0099ff;
-  --secondary-color: #7c3aed;
-  --accent-color: #f472b6;
+  /* 主色调 - 可爱粉色渐变 */
+  --primary-color: #ff6b9d;
+  --primary-light: #ffb3d1;
+  --primary-dark: #ff4d8f;
+  --secondary-color: #9b59b6;
+  --accent-color: #ffeb3b;
   
   /* 功能色 */
-  --success-color: #10b981;
-  --warning-color: #f59e0b;
-  --danger-color: #ef4444;
-  --info-color: #06b6d4;
+  --success-color: #4ade80;
+  --warning-color: #fbbf24;
+  --danger-color: #f87171;
+  --info-color: #60a5fa;
   
-  /* 背景色 - 深色科技风 */
-  --bg-color: #0a0e17;
-  --bg-secondary: #111827;
-  --bg-gradient: radial-gradient(ellipse at top, #1a1f35 0%, #0a0e17 50%);
-  --card-bg: rgba(17, 24, 39, 0.8);
-  --card-glass: rgba(17, 24, 39, 0.6);
+  /* 背景色 - 温馨二次元风 */
+  --bg-color: #fdf2f8;
+  --bg-secondary: #fce7f3;
+  --bg-gradient: radial-gradient(ellipse at top, #fce7f3 0%, #fdf2f8 50%, #fae1dd 100%);
+  --card-bg: rgba(255, 255, 255, 0.9);
+  --card-glass: rgba(255, 255, 255, 0.7);
   
   /* 文字色 */
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
+  --text-primary: #5d4037;
+  --text-secondary: #795548;
+  --text-muted: #9e9e9e;
   
   /* 边框和阴影 */
-  --border-color: rgba(0, 212, 255, 0.2);
-  --glow-color: rgba(0, 212, 255, 0.5);
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow: 0 4px 20px rgba(0, 212, 255, 0.15);
-  --shadow-lg: 0 8px 40px rgba(0, 212, 255, 0.2);
-  --shadow-xl: 0 20px 60px rgba(0, 212, 255, 0.25);
-  --neon-shadow: 0 0 20px rgba(0, 212, 255, 0.4), 0 0 40px rgba(0, 212, 255, 0.2);
+  --border-color: rgba(255, 107, 157, 0.2);
+  --glow-color: rgba(255, 107, 157, 0.4);
+  --shadow-sm: 0 2px 8px rgba(255, 107, 157, 0.15);
+  --shadow: 0 4px 20px rgba(255, 107, 157, 0.2);
+  --shadow-lg: 0 8px 40px rgba(255, 107, 157, 0.25);
+  --shadow-xl: 0 20px 60px rgba(255, 107, 157, 0.3);
+  --neon-shadow: 0 0 20px rgba(255, 107, 157, 0.3), 0 0 40px rgba(255, 107, 157, 0.15);
   
   /* 圆角 */
-  --radius-sm: 8px;
-  --radius: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
+  --radius-sm: 12px;
+  --radius: 20px;
+  --radius-lg: 28px;
+  --radius-xl: 36px;
   --radius-full: 9999px;
   
   /* 间距 */
@@ -46,9 +46,9 @@
   --content-max-width: 100%;
 }
 
-/* 赛博朋克背景 */
+/* 二次元可爱背景 */
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Nunito', 'M PLUS Rounded 1c', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background-color: var(--bg-color);
   color: var(--text-primary);
   line-height: 1.6;
@@ -56,27 +56,15 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
-  cursor: crosshair;
+  cursor: default;
 }
 
 /* 背景装饰层 */
 .app {
   min-height: 100vh;
   position: relative;
-  
-  &::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--bg-gradient);
-    pointer-events: none;
-    z-index: -2;
-  }
-  
-  /* 网格背景 */
+
+  /* 渐变遮罩层 */
   &::after {
     content: '';
     position: fixed;
@@ -84,10 +72,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: 
-      linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
-    background-size: 50px 50px;
+    background: linear-gradient(135deg, rgba(253, 242, 248, 0.7) 0%, rgba(252, 231, 243, 0.7) 50%, rgba(250, 225, 221, 0.7) 100%);
     pointer-events: none;
     z-index: -1;
   }
@@ -582,7 +567,7 @@ a {
 .main-content {
   max-width: var(--content-max-width);
   margin: 0 auto;
-  padding: 40px 24px;
+  padding: 80px 24px 60px;
   display: grid;
   grid-template-columns: 1fr;
   gap: 24px;
@@ -2144,7 +2129,7 @@ a {
   }
   
   .main-content {
-    padding: 24px 16px;
+    padding: 64px 16px 50px;
   }
   
   .article-detail .article-container {
@@ -2198,21 +2183,84 @@ a {
 }
 
 .el-button {
-  border-radius: var(--radius) !important;
+  border-radius: var(--radius-full) !important;
+  font-weight: 600 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+
+  &:hover {
+    transform: scale(1.05) translateY(-2px) !important;
+  }
+}
+
+.el-button--primary {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
+  border: none !important;
+  box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3) !important;
+
+  &:hover {
+    box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4) !important;
+  }
+}
+
+.el-button--success {
+  background: linear-gradient(135deg, #10b981, #4ade80) !important;
+  border: none !important;
+  box-shadow: 0 4px 15px rgba(74, 222, 128, 0.3) !important;
+}
+
+.el-button--warning {
+  background: linear-gradient(135deg, #f59e0b, #fbbf24) !important;
+  border: none !important;
+  box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3) !important;
+}
+
+.el-button--danger {
+  background: linear-gradient(135deg, #ef4444, #f87171) !important;
+  border: none !important;
+  box-shadow: 0 4px 15px rgba(248, 113, 113, 0.3) !important;
 }
 
 .el-tag {
   border-radius: var(--radius-full) !important;
+  font-weight: 600 !important;
+  padding: 6px 14px !important;
+  font-size: 13px !important;
+  border: 2px solid var(--border-color) !important;
+  transition: all 0.3s !important;
+
+  &:hover {
+    transform: scale(1.05) !important;
+  }
+}
+
+.el-tag--primary {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
+  color: white !important;
+  border: none !important;
+}
+
+.el-tag--success {
+  background: linear-gradient(135deg, #10b981, #4ade80) !important;
+  color: white !important;
+  border: none !important;
+}
+
+.el-tag--warning {
+  background: linear-gradient(135deg, #f59e0b, #fbbf24) !important;
+  color: white !important;
+  border: none !important;
 }
 
 .el-textarea__inner {
-  border-radius: var(--radius) !important;
+  border-radius: var(--radius-lg) !important;
   background: var(--bg-secondary) !important;
-  border-color: var(--border-color) !important;
-  
+  border: 2px solid var(--border-color) !important;
+  transition: all 0.3s !important;
+
   &:focus {
     border-color: var(--primary-color) !important;
-    box-shadow: 0 0 10px rgba(0, 212, 255, 0.2) !important;
+    box-shadow: 0 0 15px rgba(255, 107, 157, 0.25) !important;
+    transform: scale(1.01);
   }
 }
 
@@ -2220,24 +2268,53 @@ a {
   border-radius: var(--radius-xl) !important;
   background: var(--card-bg) !important;
   backdrop-filter: blur(20px) !important;
-  border: 1px solid var(--border-color) !important;
+  border: 2px solid var(--border-color) !important;
+  box-shadow: 0 20px 60px rgba(255, 107, 157, 0.3) !important;
+}
+
+.el-dialog__header {
+  border-bottom: 2px solid var(--border-color) !important;
+  padding: 20px 24px !important;
 }
 
 .el-message {
-  border-radius: var(--radius) !important;
+  border-radius: var(--radius-full) !important;
   background: var(--card-bg) !important;
   backdrop-filter: blur(20px) !important;
-  border: 1px solid var(--border-color) !important;
+  border: 2px solid var(--border-color) !important;
+  box-shadow: 0 8px 25px rgba(255, 107, 157, 0.25) !important;
+  padding: 14px 24px !important;
+  font-weight: 500 !important;
+}
+
+.el-message--success {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(74, 222, 128, 0.1)) !important;
+  border-color: #10b981 !important;
+}
+
+.el-message--warning {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(251, 191, 36, 0.1)) !important;
+  border-color: #f59e0b !important;
+}
+
+.el-message--error {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(248, 113, 113, 0.1)) !important;
+  border-color: #ef4444 !important;
+}
+
+.el-message--info {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(96, 165, 250, 0.1)) !important;
+  border-color: #06b6d4 !important;
 }
 
 /* ===================== 深色模式 ===================== */
 .dark-mode {
-  /* 浅色赛博朋克主题 */
-  --primary-color: #0066ff;
-  --primary-light: #3399ff;
-  --primary-dark: #0044cc;
-  --secondary-color: #7c3aed;
-  --accent-color: #ec4899;
+  /* 深色二次元主题 */
+  --primary-color: #ff6b9d;
+  --primary-light: #ffb3d1;
+  --primary-dark: #ff4d8f;
+  --secondary-color: #9b59b6;
+  --accent-color: #f39c12;
   
   /* 功能色 */
   --success-color: #10b981;
@@ -2245,21 +2322,21 @@ a {
   --danger-color: #ef4444;
   --info-color: #3b82f6;
   
-  /* 背景色 - 浅色科技风 */
-  --bg-color: #f8fafc;
-  --bg-secondary: #ffffff;
-  --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  --card-bg: rgba(255, 255, 255, 0.9);
-  --card-glass: rgba(255, 255, 255, 0.7);
+  /* 背景色 - 温馨深色 */
+  --bg-color: #2d1b2e;
+  --bg-secondary: #1a1425;
+  --bg-gradient: linear-gradient(135deg, #2d1b2e 0%, #1a1425 100%);
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --card-glass: rgba(255, 255, 255, 0.85);
   
   /* 文字色 */
-  --text-primary: #1e293b;
-  --text-secondary: #475569;
-  --text-muted: #64748b;
+  --text-primary: #fce7f3;
+  --text-secondary: #f4d1e6;
+  --text-muted: #c4a6ad;
   
   /* 边框和阴影 */
-  --border-color: rgba(0, 102, 255, 0.15);
-  --glow-color: rgba(0, 102, 255, 0.3);
+  --border-color: rgba(255, 107, 157, 0.25);
+  --glow-color: rgba(255, 107, 157, 0.35);
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
   --shadow: 0 4px 20px rgba(0, 102, 255, 0.1);
   --shadow-lg: 0 8px 40px rgba(0, 102, 255, 0.15);

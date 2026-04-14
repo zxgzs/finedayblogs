@@ -14,6 +14,7 @@ import Series from '@/views/Series.vue'
 import SeriesDetail from '@/views/SeriesDetail.vue'
 import Dashboard from '@/views/Dashboard.vue'
 import Gallery from '@/views/Gallery.vue'
+import ScriptPlugins from '@/views/ScriptPlugins.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -89,6 +90,12 @@ const routes: RouteRecordRaw[] = [
     meta: { title: '内容画廊' }
   },
   {
+    path: '/plugins',
+    name: 'Plugins',
+    component: ScriptPlugins,
+    meta: { title: '脚本插件' }
+  },
+  {
     path: '/contact',
     name: 'Contact',
     component: Contact,
@@ -121,7 +128,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, _from, next) => {
-  document.title = `${to.meta.title || '博客'} - 我的个人博客`
+  document.title = `${to.meta.title || '博客'} - 晴天的博客`
   next()
 })
 

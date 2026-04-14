@@ -7,7 +7,7 @@
         </div>
         <div class="avatar-ring"></div>
       </div>
-      <h1 class="name gradient-text">前端开发工程师</h1>
+      <h1 class="name gradient-text">晴天</h1>
       <p class="bio animated-gradient-text">前端开发 | Vue / React | 技术分享</p>
       <div class="social-badges">
         <span class="badge magnetic">Vue 3</span>
@@ -23,7 +23,7 @@
           关于我
         </h2>
         <div class="section-content">
-          <p>你好！我是一名热爱技术的前端开发工程师，专注于现代 Web 前端技术。</p>
+          <p>你好！我是晴天，一名热爱技术的前端开发工程师，专注于现代 Web 前端技术。</p>
           <p>我创建这个博客的目的是记录学习过程中的点滴，分享前端开发经验，希望能帮助到更多正在学习前端的朋友们。</p>
           <p>平时喜欢研究新技术，关注前端生态，对 Vue、React、TypeScript、小程序等前端技术有浓厚的兴趣。</p>
         </div>

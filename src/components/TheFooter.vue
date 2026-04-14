@@ -2,18 +2,12 @@
   <footer class="footer">
     <div class="footer-content">
       <p class="copyright">
-        © 2026 我的个人博客 · Made with
+        © 2026 晴天的博客 · Made with
         <el-icon style="color: #f56c6c;">
           <Star/>
         </el-icon>
         by Vue 3
       </p>
-      <div class="footer-links">
-        <router-link to="/about">关于我们</router-link>
-        <router-link to="/contact">联系方式</router-link>
-        <router-link to="/admin">管理后台</router-link>
-        <a href="#" @click.prevent="showNotification('功能开发中...', 'info')">隐私政策</a>
-      </div>
     </div>
   </footer>
 </template>
@@ -29,41 +23,51 @@ const showNotification = (message: string, type: 'success' | 'warning' | 'error'
 
 <style scoped>
 .footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
   background: var(--card-glass);
   backdrop-filter: blur(10px);
-  border-top: 1px solid var(--border-color);
-  padding: 20px 0;
-  margin-top: auto;
+  border-top: 3px solid;
+  border-image: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--accent-color)) 1;
+  padding: 8px 0;
+  box-shadow: 0 -4px 20px rgba(255, 107, 157, 0.2);
+  z-index: 9998;
+}
+
+.footer::before {
+  content: '💕';
+  position: absolute;
+  top: -12px;
+  right: 20px;
+  font-size: 20px;
+  animation: bounce 2s ease-in-out infinite;
 }
 
 .footer-content {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 12px;
+  justify-content: center;
+  gap: 10px;
 }
 
 .copyright {
   color: var(--text-muted);
-  font-size: 14px;
+  font-size: 12px;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
+  font-weight: 500;
 }
 
-.footer-links {
-  display: flex;
-  gap: 20px;
-}
-
-.footer-links a {
-  color: var(--text-secondary);
-  text-decoration: none;
-  font-size: 14px;
-  transition: color 0.3s;
-
-  &:hover {
-    color: var(--primary-color);
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
   }
 }
 </style>

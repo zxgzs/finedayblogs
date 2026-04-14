@@ -128,7 +128,7 @@
         <div class="avatar pulse-ring">
           <el-icon :size="50"><UserFilled /></el-icon>
         </div>
-        <div class="name gradient-text">技术博主</div>
+        <div class="name gradient-text">晴天</div>
         <div class="bio">热爱技术，专注前端开发，分享学习心得与实战经验</div>
         <div class="stats">
           <div class="stat-item magnetic">
