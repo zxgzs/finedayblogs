@@ -1,0 +1,16 @@
+# robots.txt for 晴天的博客
+# https://yourblog.com
+
+User-agent: *
+Allow: /
+
+Disallow: /admin/
+Disallow: /api/
+Disallow: /node_modules/
+Disallow: /src/
+
+# 站点地图
+Sitemap: https://yourblog.com/sitemap.xml
+
+# 爬取延迟
+Crawl-delay: 1

@@ -13,7 +13,8 @@
     "preview": "vite preview",
     "type-check": "vue-tsc --noEmit",
     "lint": "eslint src --ext .vue,.ts",
-    "analyze": "vite build --mode analyze"
+    "analyze": "vite build --mode analyze",
+    "generate:sitemap": "node scripts/generate-sitemap.js"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.2",
