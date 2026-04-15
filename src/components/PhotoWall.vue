@@ -99,6 +99,10 @@ const viewPhoto = (photo: Photo) => {
 
 <style scoped lang="scss">
 .photo-wall {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: 600px;
+
   .wall-header {
     display: flex;
     justify-content: space-between;
@@ -120,8 +124,11 @@ const viewPhoto = (photo: Photo) => {
 
   .photo-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)) !important;
+    gap: 10px;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
 
     .photo-item {
       position: relative;
@@ -264,8 +271,31 @@ const viewPhoto = (photo: Photo) => {
     }
 
     .photo-grid {
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+
+      .photo-item {
+        aspect-ratio: 1 / 1;
+
+        .photo-wrapper {
+          .photo-overlay {
+            .overlay-content {
+              h3 {
+                font-size: 14px;
+              }
+
+              p {
+                font-size: 11px;
+                -webkit-line-clamp: 1;
+              }
+
+              .photo-meta {
+                font-size: 10px;
+              }
+            }
+          }
+        }
+      }
     }
   }
 

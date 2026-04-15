@@ -1,129 +1,7 @@
 <template>
   <div class="home-page">
-    <div class="main-area">
-      <!-- 搜索和筛选区域 -->
-      <div class="search-section glassmorphism border-flow">
-        <div class="search-bar">
-          <el-input
-            v-model="searchKeyword"
-            placeholder="搜索文章标题或内容..."
-            class="search-input"
-            clearable
-            @input="handleSearch"
-            size="large"
-          >
-            <template #prefix>
-              <el-icon><Search /></el-icon>
-            </template>
-          </el-input>
-          <el-button type="primary" size="large" class="btn-flow magnetic" @click="handleSearch">
-            <el-icon><Search /></el-icon>
-            搜索
-          </el-button>
-        </div>
-        <div class="filter-row">
-          <span class="filter-label">分类:</span>
-          <el-tag
-            v-for="cat in ['全部', ...categoryList]"
-            :key="cat"
-            :class="{ 'active-tag': selectedCategory === cat }"
-            class="filter-tag magnetic"
-            @click="filterByCategory(cat)"
-          >
-            {{ cat }}
-          </el-tag>
-        </div>
-      </div>
-
-      <!-- 文章列表 -->
-      <div class="article-list" v-if="filteredArticles.length > 0">
-        <div
-          v-for="article in paginatedArticles"
-          :key="article.id"
-          class="article-card hover-glow hover-scale"
-          @click="goToArticle(article.id)"
-        >
-          <!-- 卡片扫描线效果 -->
-          <div class="card-scan-line"></div>
-          
-          <div class="article-header">
-            <div class="article-title-row">
-              <el-tag v-if="article.isTop" size="small" type="danger" effect="dark" class="pulse-ring">置顶</el-tag>
-              <h2 class="article-title glitch-text" :data-text="article.title">
-                {{ article.title }}
-              </h2>
-            </div>
-            <div class="article-meta">
-              <span class="meta-item">
-                <el-icon><Calendar /></el-icon>
-                {{ article.date }}
-              </span>
-              <span class="meta-item">
-                <el-icon><Folder /></el-icon>
-                {{ article.category }}
-              </span>
-              <span class="meta-item">
-                <el-icon><View /></el-icon>
-                {{ article.views }} 次阅读
-              </span>
-            </div>
-          </div>
-          <p class="article-summary">{{ article.summary }}</p>
-          <div class="article-footer">
-            <div class="article-tags">
-              <span v-for="tag in article.tags" :key="tag" class="tag magnetic">
-                {{ tag }}
-              </span>
-            </div>
-            <div class="article-actions">
-              <span
-                class="action-btn magnetic"
-                :class="{ 
-                  'is-liked': isLiked(article.id),
-                  'like-animate': likeAnimation === article.id
-                }"
-                @click.stop="handleLike(article)"
-              >
-                <el-icon><Star /></el-icon>
-                {{ article.likes + (isLiked(article.id) ? 1 : 0) }}
-              </span>
-              <span
-                class="action-btn magnetic"
-                :class="{ 'is-collected': isCollected(article.id) }"
-                @click.stop="handleCollect(article)"
-              >
-                <el-icon><Collection /></el-icon>
-                {{ article.collects + (isCollected(article.id) ? 1 : 0) }}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div v-else class="not-found">
-        <el-empty description="没有找到相关文章">
-          <el-button type="primary" @click="resetFilters">重置筛选</el-button>
-        </el-empty>
-      </div>
-
-      <!-- 分页 -->
-      <div class="pagination-wrapper" v-if="filteredArticles.length > 0">
-        <el-pagination
-          v-model:current-page="currentPage"
-          v-model:page-size="pageSize"
-          :page-sizes="[5, 10, 20]"
-          :total="filteredArticles.length"
-          layout="total, sizes, prev, pager, next, jumper"
-          background
-          class="magnetic"
-          @size-change="handleSizeChange"
-          @current-change="handlePageChange"
-        />
-      </div>
-    </div>
-
-    <!-- 侧边栏 -->
-    <aside class="sidebar">
+    <!-- 左侧边栏 -->
+    <aside class="sidebar-left">
       <div class="sidebar-section about-me">
         <div class="avatar pulse-ring">
           <el-icon :size="50"><UserFilled /></el-icon>
@@ -195,7 +73,132 @@
           </div>
         </div>
       </div>
+    </aside>
 
+    <div class="main-area">
+      <!-- 搜索和筛选区域 -->
+      <div class="search-section glassmorphism border-flow">
+        <div class="search-bar">
+          <el-input
+            v-model="searchKeyword"
+            placeholder="搜索文章标题或内容..."
+            class="search-input"
+            clearable
+            @input="handleSearch"
+            size="large"
+          >
+            <template #prefix>
+              <el-icon><Search /></el-icon>
+            </template>
+          </el-input>
+          <el-button type="primary" size="large" class="btn-flow magnetic" @click="handleSearch">
+            <el-icon><Search /></el-icon>
+            搜索
+          </el-button>
+        </div>
+        <div class="filter-row">
+          <span class="filter-label">分类:</span>
+          <el-tag
+            v-for="cat in ['全部', ...categoryList]"
+            :key="cat"
+            :class="{ 'active-tag': selectedCategory === cat }"
+            class="filter-tag magnetic"
+            @click="filterByCategory(cat)"
+          >
+            {{ cat }}
+          </el-tag>
+        </div>
+      </div>
+
+      <!-- 文章列表 -->
+      <div class="article-list" v-if="filteredArticles.length > 0">
+        <div
+          v-for="article in paginatedArticles"
+          :key="article.id"
+          class="article-card hover-glow hover-scale"
+          @click="goToArticle(article.id)"
+        >
+          <!-- 卡片扫描线效果 -->
+          <div class="card-scan-line"></div>
+
+          <div class="article-header">
+            <div class="article-title-row">
+              <el-tag v-if="article.isTop" size="small" type="danger" effect="dark" class="pulse-ring">置顶</el-tag>
+              <h2 class="article-title glitch-text" :data-text="article.title">
+                {{ article.title }}
+              </h2>
+            </div>
+            <div class="article-meta">
+              <span class="meta-item">
+                <el-icon><Calendar /></el-icon>
+                {{ article.date }}
+              </span>
+              <span class="meta-item">
+                <el-icon><Folder /></el-icon>
+                {{ article.category }}
+              </span>
+              <span class="meta-item">
+                <el-icon><View /></el-icon>
+                {{ article.views }} 次阅读
+              </span>
+            </div>
+          </div>
+          <p class="article-summary">{{ article.summary }}</p>
+          <div class="article-footer">
+            <div class="article-tags">
+              <span v-for="tag in article.tags" :key="tag" class="tag magnetic">
+                {{ tag }}
+              </span>
+            </div>
+            <div class="article-actions">
+              <span
+                class="action-btn magnetic"
+                :class="{
+                  'is-liked': isLiked(article.id),
+                  'like-animate': likeAnimation === article.id
+                }"
+                @click.stop="handleLike(article)"
+              >
+                <el-icon><Star /></el-icon>
+                {{ article.likes + (isLiked(article.id) ? 1 : 0) }}
+              </span>
+              <span
+                class="action-btn magnetic"
+                :class="{ 'is-collected': isCollected(article.id) }"
+                @click.stop="handleCollect(article)"
+              >
+                <el-icon><Collection /></el-icon>
+                {{ article.collects + (isCollected(article.id) ? 1 : 0) }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div v-else class="not-found">
+        <el-empty description="没有找到相关文章">
+          <el-button type="primary" @click="resetFilters">重置筛选</el-button>
+        </el-empty>
+      </div>
+
+      <!-- 分页 -->
+      <div class="pagination-wrapper" v-if="filteredArticles.length > 0">
+        <el-pagination
+          v-model:current-page="currentPage"
+          v-model:page-size="pageSize"
+          :page-sizes="[5, 10, 20]"
+          :total="filteredArticles.length"
+          layout="total, sizes, prev, pager, next, jumper"
+          background
+          class="magnetic"
+          @size-change="handleSizeChange"
+          @current-change="handlePageChange"
+        />
+      </div>
+    </div>
+
+    <!-- 右侧边栏 -->
+    <aside class="sidebar-right">
       <div class="sidebar-section hot-tags">
         <div class="sidebar-title">
           <el-icon><Collection /></el-icon>
@@ -414,16 +417,197 @@ onMounted(() => {
 <style scoped lang="scss">
 .home-page {
   display: grid;
-  grid-template-columns: 1fr 340px;
-  gap: 32px;
+  grid-template-columns: 300px 1fr 300px;
+  gap: 24px;
   animation: fadeIn 0.5s ease;
+  width: 100%;
+  margin: 0 auto;
 
-  @media (max-width: 1024px) {
+  @media (min-width: 1600px) {
+    max-width: 1800px;
+    grid-template-columns: 300px 1fr 300px;
+  }
+
+  @media (min-width: 1200px) and (max-width: 1599px) {
+    max-width: 1400px;
+    grid-template-columns: 300px 1fr 300px;
+  }
+
+  @media (max-width: 1199px) {
     grid-template-columns: 1fr;
+    max-width: 900px;
   }
 }
 
 .main-area {
+  padding: 0;
+
+  // 搜索区域
+  .search-section {
+    padding: 24px;
+    margin-bottom: 24px;
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+
+    .search-bar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+
+      .search-input {
+        flex: 1;
+      }
+    }
+
+    .filter-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+
+      .filter-label {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-right: 4px;
+      }
+
+      .filter-tag {
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &.active-tag {
+          background: var(--primary-color);
+          border-color: var(--primary-color);
+          color: white;
+        }
+      }
+    }
+  }
+
+  // 文章卡片
+  .article-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary-color);
+    }
+
+    .article-header {
+      margin-bottom: 12px;
+    }
+
+    .article-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    .article-meta {
+      display: flex;
+      gap: 16px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+
+      .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 13px;
+        color: var(--text-muted);
+
+        svg {
+          font-size: 14px;
+        }
+      }
+    }
+
+    .article-summary {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin: 0 0 16px 0;
+    }
+
+    .article-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+
+      .article-tags {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+
+        .tag {
+          padding: 4px 10px;
+          background: var(--card-glass);
+          border: 1px solid var(--border-color);
+          border-radius: var(--radius-sm);
+          font-size: 12px;
+          color: var(--text-secondary);
+          cursor: pointer;
+          transition: all 0.3s ease;
+
+          &:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+          }
+        }
+      }
+
+      .article-actions {
+        display: flex;
+        gap: 12px;
+
+        .action-btn {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          padding: 6px 12px;
+          border-radius: var(--radius-sm);
+          font-size: 13px;
+          color: var(--text-muted);
+          cursor: pointer;
+          transition: all 0.3s ease;
+
+          &:hover {
+            background: var(--card-glass);
+            color: var(--text-primary);
+          }
+
+          &.is-liked {
+            color: #ec4899;
+          }
+
+          &.is-collected {
+            color: #fbbf24;
+          }
+
+          svg {
+            font-size: 16px;
+          }
+        }
+      }
+    }
+  }
+
   .article-list {
     display: flex;
     flex-direction: column;
@@ -434,6 +618,293 @@ onMounted(() => {
     margin-top: 40px;
     display: flex;
     justify-content: center;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(12px);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '✨';
+      position: absolute;
+      top: 8px;
+      right: 15px;
+      font-size: 16px;
+      opacity: 0.6;
+      animation: twinkle 2s ease-in-out infinite;
+    }
+
+    &::after {
+      content: '⭐';
+      position: absolute;
+      top: 8px;
+      left: 15px;
+      font-size: 16px;
+      opacity: 0.6;
+      animation: twinkle 2s ease-in-out infinite 1s;
+    }
+  }
+}
+
+// 二次元风格分页样式
+:deep(.el-pagination) {
+  .el-pagination__total,
+  .el-pagination__jump {
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+
+  .btn-prev,
+  .btn-next {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(139, 92, 246, 0.1)) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--radius-md) !important;
+    color: var(--primary-color) !important;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s ease;
+    }
+
+    &:hover {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
+      color: white !important;
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 8px 20px rgba(236, 72, 153, 0.3);
+
+      &::before {
+        left: 100%;
+      }
+    }
+
+    &:active {
+      transform: translateY(0) scale(0.95);
+    }
+  }
+
+  .el-pager {
+    li {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      margin: 0 4px;
+      color: var(--text-secondary);
+      font-weight: 500;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s ease;
+      }
+
+      &:hover {
+        background: linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(139, 92, 246, 0.15));
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+        transform: translateY(-2px) scale(1.1);
+        box-shadow: 0 4px 12px rgba(236, 72, 153, 0.2);
+
+        &::before {
+          left: 100%;
+        }
+      }
+
+      &.is-active {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
+        border-color: transparent;
+        color: white !important;
+        transform: scale(1.15);
+        box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4);
+        animation: pulseGlow 2s ease-in-out infinite;
+
+        &::after {
+          content: '💖';
+          position: absolute;
+          top: -8px;
+          right: -8px;
+          font-size: 12px;
+          animation: heartFloat 1s ease-in-out infinite;
+        }
+      }
+    }
+  }
+
+  .el-pagination__sizes {
+    .el-select {
+      .el-input__wrapper {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        transition: all 0.3s ease;
+
+        &:hover {
+          border-color: var(--primary-color);
+          box-shadow: 0 0 12px rgba(236, 72, 153, 0.2);
+        }
+
+        .el-input__inner {
+          color: var(--text-primary);
+        }
+      }
+    }
+  }
+
+  .el-pagination__jump {
+    input {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      transition: all 0.3s ease;
+
+      &:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 12px rgba(236, 72, 153, 0.3);
+      }
+    }
+  }
+}
+
+// 二次元装饰动画
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.2) rotate(180deg);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4);
+  }
+  50% {
+    box-shadow: 0 6px 30px rgba(236, 72, 153, 0.6);
+  }
+}
+
+@keyframes heartFloat {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-5px) scale(1.2);
+    opacity: 0.8;
+  }
+}
+
+// 工具类
+.glassmorphism {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.btn-flow {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  border: none;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px var(--glow-color);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.border-flow {
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color), var(--primary-color));
+    background-size: 400% 400%;
+    animation: borderFlow 8s ease infinite;
+    z-index: -1;
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  &:hover::before {
+    opacity: 0.3;
+  }
+}
+
+@keyframes borderFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.hover-glow {
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 0 30px var(--glow-color);
+  }
+}
+
+.hover-scale {
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.02);
+  }
+}
+
+.magnetic {
+  transition: transform 0.3s ease;
+}
+
+.sidebar-left,
+.sidebar-right {
+  position: sticky;
+  top: 100px;
+  height: fit-content;
+
+  @media (max-width: 1199px) {
+    display: none;
   }
 }
 
@@ -480,12 +951,6 @@ onMounted(() => {
   flex-wrap: wrap;
 }
 
-.sidebar {
-  @media (max-width: 1024px) {
-    display: none;
-  }
-}
-
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -494,6 +959,221 @@ onMounted(() => {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+// 侧边栏区块样式
+.sidebar-section {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 24px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: var(--shadow);
+  }
+
+  .sidebar-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    svg {
+      font-size: 18px;
+      color: var(--primary-color);
+    }
+  }
+}
+
+// 个人信息区块
+.about-me {
+  text-align: center;
+  padding: 24px 20px;
+
+  .avatar {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 16px;
+    border-radius: var(--radius-full);
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 32px;
+    border: 3px solid var(--border-color);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .name {
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+
+  .bio {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .social-links {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+}
+
+// 分类列表
+.categories {
+  .category-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .category-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: transparent;
+    border: 1px solid transparent;
+
+    &:hover {
+      background: rgba(236, 72, 153, 0.08);
+      border-color: var(--border-color);
+      transform: translateX(4px);
+    }
+
+    &.active {
+      background: linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(168, 85, 247, 0.15));
+      border-color: var(--primary-color);
+      font-weight: 600;
+
+      .category-name svg {
+        color: var(--primary-color);
+      }
+    }
+
+    .category-name {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--text-primary);
+
+      svg {
+        font-size: 16px;
+        color: var(--text-muted);
+        transition: color 0.3s ease;
+      }
+    }
+
+    .category-count {
+      font-size: 12px;
+      color: var(--text-muted);
+      background: var(--card-glass);
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+  }
+}
+
+// 热门标签
+.hot-tags {
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tag-item {
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    color: var(--text-secondary);
+    background: var(--card-glass);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-color: var(--primary-color);
+      background: rgba(236, 72, 153, 0.1);
+      color: var(--primary-color);
+      transform: translateY(-2px);
+    }
+
+    &.active {
+      background: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+      box-shadow: var(--shadow);
+    }
+  }
+}
+
+// 最新文章
+.recent-articles {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .article-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: var(--card-glass);
+    border: 1px solid var(--border-color);
+
+    &:hover {
+      border-color: var(--primary-color);
+      background: rgba(236, 72, 153, 0.08);
+      transform: translateX(4px);
+    }
+
+    .article-title {
+      flex: 1;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-primary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin-right: 12px;
+    }
+
+    .article-date {
+      font-size: 11px;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
   }
 }
 
@@ -630,6 +1310,118 @@ onMounted(() => {
   }
   60% {
     transform: scale(1);
+  }
+}
+
+// 文字特效
+.glitch-text {
+  position: relative;
+
+  &::before,
+  &::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  &:hover::before {
+    animation: glitch1 0.3s ease-in-out;
+  }
+
+  &:hover::after {
+    animation: glitch2 0.3s ease-in-out;
+  }
+}
+
+@keyframes glitch1 {
+  0%, 100% {
+    transform: translate(0);
+    opacity: 0.8;
+    color: var(--primary-color);
+  }
+  25% {
+    transform: translate(-2px, 2px);
+  }
+  50% {
+    transform: translate(2px, -2px);
+  }
+  75% {
+    transform: translate(-2px, -2px);
+  }
+}
+
+@keyframes glitch2 {
+  0%, 100% {
+    transform: translate(0);
+    opacity: 0.8;
+    color: var(--secondary-color);
+  }
+  25% {
+    transform: translate(2px, -2px);
+  }
+  50% {
+    transform: translate(-2px, 2px);
+  }
+  75% {
+    transform: translate(2px, 2px);
+  }
+}
+
+.pulse-ring {
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    border-radius: inherit;
+    border: 2px solid var(--primary-color);
+    opacity: 0;
+    animation: pulseRing 2s ease-out infinite;
+  }
+}
+
+@keyframes pulseRing {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.animated-gradient-text {
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--accent-color), var(--primary-color));
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientMove 3s linear infinite;
+}
+
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 300% 50%;
   }
 }
 

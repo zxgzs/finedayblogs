@@ -11,8 +11,8 @@
     </div>
 
     <!-- 当前播放器 -->
-    <div v-if="currentAudio" class="current-player">
-      <AudioPlayer :audio="currentAudio" />
+    <div class="current-player" :style="{ minHeight: currentAudio ? 'auto' : '0', marginBottom: currentAudio ? '24px' : '0' }">
+      <AudioPlayer v-if="currentAudio" :audio="currentAudio" />
     </div>
 
     <!-- 音频列表 -->
@@ -115,6 +115,13 @@ watch(isPlaying, (newState) => {
 
 <style scoped lang="scss">
 .audio-gallery {
+  width: 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  overflow-x: hidden;
+  min-height: 600px;
+
   .gallery-header {
     display: flex;
     justify-content: space-between;
@@ -136,12 +143,22 @@ watch(isPlaying, (newState) => {
 
   .current-player {
     margin-bottom: 24px;
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden;
   }
 
   .audio-list {
     display: flex;
     flex-direction: column;
     gap: 12px;
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden;
 
     .audio-item {
       display: flex;
@@ -153,6 +170,10 @@ watch(isPlaying, (newState) => {
       cursor: pointer;
       transition: all 0.3s ease;
       border: 2px solid transparent;
+      width: 100% !important;
+      min-width: 100% !important;
+      box-sizing: border-box !important;
+      overflow-x: hidden;
 
       &:hover {
         background: var(--bg-secondary);
@@ -186,6 +207,9 @@ watch(isPlaying, (newState) => {
       .audio-content {
         flex: 1;
         min-width: 0;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden;
 
         .audio-main {
           margin-bottom: 8px;

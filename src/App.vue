@@ -1,5 +1,5 @@
 <template>
-	<div :class="{ 'dark-mode': isDarkMode }" class="app">
+	<div :class="{ 'dark-mode': isDarkMode, 'eye-care-mode': isEyeCareMode }" class="app">
 		<!-- 设置面板遮罩层 -->
 		<div v-if="showSettings" class="settings-overlay" @click="showSettings = false"></div>
 
@@ -262,13 +262,18 @@ const toggleTheme = () => {
 const isEyeCareMode = ref(false)
 
 const toggleEyeCareMode = () => {
+	// 如果护眼模式和深色模式同时开启，先关闭深色模式
+	if (isDarkMode.value) {
+		isDarkMode.value = false
+		document.documentElement.classList.remove('dark-mode')
+	}
+
 	isEyeCareMode.value = !isEyeCareMode.value
 	localStorage.setItem('eye_care_mode', String(isEyeCareMode.value))
+
 	if (isEyeCareMode.value) {
-		document.documentElement.classList.add('eye-care-mode')
 		showNotification('护眼模式已开启', 'success')
 	} else {
-		document.documentElement.classList.remove('eye-care-mode')
 		showNotification('护眼模式已关闭', 'info')
 	}
 }
@@ -596,7 +601,11 @@ onMounted(() => {
 	const storedEyeCare = localStorage.getItem('eye_care_mode')
 	if (storedEyeCare === 'true') {
 		isEyeCareMode.value = true
-		document.documentElement.classList.add('eye-care-mode')
+		// 如果开启了护眼模式，确保深色模式关闭
+		if (isDarkMode.value) {
+			isDarkMode.value = false
+			document.documentElement.classList.remove('dark-mode')
+		}
 	}
 
 	window.addEventListener('keydown', handleKeydown)
@@ -664,16 +673,30 @@ onUnmounted(() => {
 
 /* 护眼模式 */
 :global(.eye-care-mode) {
-	--bg-color: #faf5e6 !important;
-	--bg-secondary: #f5edd8 !important;
-	--text-primary: #4a4036 !important;
-	--text-secondary: #6b5d52 !important;
-	--text-muted: #9a8a7d !important;
-	--card-bg: rgba(255, 251, 235, 0.5) !important;
-	--card-glass: rgba(255, 251, 235, 0.4) !important;
-	--card-higher-opacity: rgba(255, 251, 235, 0.85) !important;
-	--border-color: rgba(212, 160, 86, 0.2) !important;
-	--primary-color: #d4a056 !important;
-	background: #faf5e6 !important;
+  --primary-color: #d4a056 !important;
+  --primary-light: #e6b87a !important;
+  --primary-dark: #b8863a !important;
+  --secondary-color: #8b7355 !important;
+  --accent-color: #c9a86c !important;
+
+  --bg-color: #fdf6e3 !important;
+  --bg-secondary: #fff8dc !important;
+  --bg-gradient: linear-gradient(135deg, #fdf6e3 0%, #faebd7 100%) !important;
+  --card-bg: rgba(255, 253, 240, 0.5) !important;
+  --card-glass: rgba(255, 253, 240, 0.4) !important;
+  --card-higher-opacity: rgba(255, 253, 240, 0.85) !important;
+
+  --text-primary: #5c4d3c !important;
+  --text-secondary: #7a6b5a !important;
+  --text-muted: #9a8b7a !important;
+
+  --border-color: #e6d5b8 !important;
+  --glow-color: rgba(212, 160, 86, 0.3) !important;
+  --shadow-sm: 0 2px 8px rgba(92, 77, 60, 0.1) !important;
+  --shadow: 0 4px 20px rgba(92, 77, 60, 0.15) !important;
+  --shadow-lg: 0 8px 40px rgba(92, 77, 60, 0.2) !important;
+  --shadow-xl: 0 20px 60px rgba(92, 77, 60, 0.25) !important;
+
+  background: #fdf6e3 !important;
 }
 </style>

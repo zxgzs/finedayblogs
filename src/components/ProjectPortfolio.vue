@@ -148,6 +148,10 @@ const openGithub = (url: string) => {
 
 <style scoped lang="scss">
 .portfolio {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: 600px;
+
   .portfolio-header {
     display: flex;
     justify-content: space-between;
@@ -170,8 +174,11 @@ const openGithub = (url: string) => {
 
   .project-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-    gap: 24px;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)) !important;
+    gap: 16px;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
 
     .project-card {
       background: var(--bg-card);
@@ -316,8 +323,57 @@ const openGithub = (url: string) => {
     }
 
     .project-grid {
-      grid-template-columns: 1fr;
-      gap: 16px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+
+      .project-card {
+        .project-cover {
+          aspect-ratio: 16 / 12;
+        }
+
+        .project-content {
+          padding: 12px;
+
+          .project-tags {
+            gap: 6px;
+            margin-bottom: 8px;
+
+            .el-tag {
+              font-size: 11px;
+            }
+          }
+
+          .project-title {
+            font-size: 14px;
+            margin-bottom: 6px;
+          }
+
+          .project-description {
+            font-size: 12px;
+            margin-bottom: 12px;
+            -webkit-line-clamp: 2;
+          }
+
+          .project-footer {
+            flex-direction: column;
+            gap: 8px;
+            align-items: flex-start;
+
+            .project-date {
+              font-size: 11px;
+            }
+
+            .project-actions {
+              width: 100%;
+
+              .el-button {
+                flex: 1;
+                font-size: 12px;
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

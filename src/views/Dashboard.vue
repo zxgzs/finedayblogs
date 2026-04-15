@@ -17,8 +17,8 @@
       </div>
     </div>
 
-    <!-- 统计卡片 -->
-    <div class="stats-grid">
+    <!-- 统计卡片 - 合并为一行 -->
+    <div class="stats-grid stats-grid-compact">
       <StatsCard
         title="总浏览量"
         :value="readingStats.totalViews"
@@ -27,6 +27,7 @@
         unit="次"
         :trend="12.5"
         :loading="isLoading"
+        compact
       />
       <StatsCard
         title="总阅读时长"
@@ -36,6 +37,7 @@
         unit="分钟"
         :trend="8.3"
         :loading="isLoading"
+        compact
       />
       <StatsCard
         title="文章数量"
@@ -45,6 +47,7 @@
         unit="篇"
         :trend="-2.1"
         :loading="isLoading"
+        compact
       />
       <StatsCard
         title="完成率"
@@ -54,11 +57,8 @@
         unit="%"
         :trend="5.7"
         :loading="isLoading"
+        compact
       />
-    </div>
-
-    <!-- 互动统计 -->
-    <div class="stats-grid">
       <StatsCard
         title="总点赞数"
         :value="interactionStats.totalLikes"
@@ -67,6 +67,7 @@
         unit="次"
         :trend="15.2"
         :loading="isLoading"
+        compact
       />
       <StatsCard
         title="总评论数"
@@ -76,6 +77,7 @@
         unit="条"
         :trend="18.7"
         :loading="isLoading"
+        compact
       />
       <StatsCard
         title="总分享数"
@@ -85,6 +87,7 @@
         unit="次"
         :trend="22.4"
         :loading="isLoading"
+        compact
       />
       <StatsCard
         title="平均互动"
@@ -94,6 +97,7 @@
         unit="次"
         :trend="10.6"
         :loading="isLoading"
+        compact
       />
     </div>
 
@@ -445,16 +449,42 @@ onMounted(() => {
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px;
     margin-bottom: 24px;
+
+    &.stats-grid-compact {
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+
+      @media (min-width: 1200px) {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      @media (min-width: 1600px) {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      @media (max-width: 768px) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      @media (max-width: 480px) {
+        grid-template-columns: 1fr;
+      }
+    }
   }
 
   .charts-row {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
     gap: 20px;
     margin-bottom: 24px;
 
+    @media (min-width: 1400px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
     @media (max-width: 768px) {
       grid-template-columns: 1fr;
+      gap: 16px;
     }
   }
 

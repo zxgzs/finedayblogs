@@ -97,6 +97,10 @@ const formatDate = (dateStr: string) => {
 
 <style scoped lang="scss">
 .video-gallery {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: 600px;
+
   .gallery-header {
     display: flex;
     justify-content: space-between;
@@ -118,8 +122,11 @@ const formatDate = (dateStr: string) => {
 
   .video-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 24px;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)) !important;
+    gap: 14px;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
 
     .video-item {
       background: var(--bg-card);
@@ -253,8 +260,38 @@ const formatDate = (dateStr: string) => {
     }
 
     .video-grid {
-      grid-template-columns: 1fr;
-      gap: 16px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+
+      .video-item {
+        .video-thumbnail {
+          aspect-ratio: 16 / 10;
+        }
+
+        .video-info {
+          padding: 12px;
+
+          .video-title {
+            font-size: 13px;
+            -webkit-line-clamp: 2;
+          }
+
+          .video-description {
+            font-size: 12px;
+            -webkit-line-clamp: 2;
+          }
+
+          .video-meta {
+            .el-tag {
+              font-size: 11px;
+            }
+
+            .video-date {
+              font-size: 11px;
+            }
+          }
+        }
+      }
     }
   }
 

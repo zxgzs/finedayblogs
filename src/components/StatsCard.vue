@@ -1,7 +1,7 @@
 <template>
-  <div class="stats-card" :class="[`stats-card-${type}`, { 'is-loading': loading }]">
+  <div class="stats-card" :class="[`stats-card-${type}`, { 'is-loading': loading, 'is-compact': compact }]">
     <div class="stats-card-icon">
-      <el-icon :size="24">
+      <el-icon :size="compact ? 20 : 24">
         <component :is="icon" />
       </el-icon>
     </div>
@@ -12,7 +12,7 @@
         <span v-else>{{ formattedValue }}</span>
         <span v-if="unit" class="stats-card-unit">{{ unit }}</span>
       </div>
-      <div v-if="trend !== undefined" class="stats-card-trend" :class="`trend-${trendType}`">
+      <div v-if="trend !== undefined && !compact" class="stats-card-trend" :class="`trend-${trendType}`">
         <el-icon :size="14">
           <component :is="trendIcon" />
         </el-icon>
@@ -35,12 +35,14 @@ interface Props {
   unit?: string
   trend?: number
   loading?: boolean
+  compact?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   type: 'primary',
   trend: undefined,
-  loading: false
+  loading: false,
+  compact: false
 })
 
 const trendType = computed(() => {
@@ -90,6 +92,36 @@ const formattedValue = computed(() => {
     pointer-events: none;
   }
 
+  &.is-compact {
+    gap: 12px;
+    padding: 14px;
+
+    .stats-card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+    }
+
+    .stats-card-content {
+      .stats-card-title {
+        font-size: 13px;
+        margin-bottom: 6px;
+      }
+
+      .stats-card-value {
+        font-size: 22px;
+
+        .stats-card-unit {
+          font-size: 12px;
+        }
+      }
+    }
+
+    &:hover {
+      transform: translateY(-1px);
+    }
+  }
+
   .stats-card-icon {
     display: flex;
     align-items: center;
@@ -97,6 +129,7 @@ const formattedValue = computed(() => {
     width: 56px;
     height: 56px;
     border-radius: 12px;
+    flex-shrink: 0;
   }
 
   &.stats-card-primary .stats-card-icon {
@@ -132,6 +165,9 @@ const formattedValue = computed(() => {
       font-size: 14px;
       color: var(--text-secondary);
       margin-bottom: 8px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .stats-card-value {
