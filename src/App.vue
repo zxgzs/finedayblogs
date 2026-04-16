@@ -612,7 +612,7 @@ onMounted(() => {
 	window.addEventListener('resize', handleWindowResize)
 
 	if (window.OML2D) {
-		let models = ['live2dmodels/sry_yushi/sry_yushi.model3.json']
+		let models = ['HK416-2-destroy/model.json']
 		window.OML2D.loadOml2d({
 			menus: {},
 			models: models.map(model => {
