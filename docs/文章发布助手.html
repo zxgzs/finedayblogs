@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📝 文章发布助手 - 掘金 & CSDN</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #0f172a;
+  --card: #1e293b;
+  --card-hover: #334155;
+  --border: #334155;
+  --accent: #00d4ff;
+  --accent2: #a855f7;
+  --text: #e2e8f0;
+  --text-dim: #94a3b8;
+  --success: #22c55e;
+  --warning: #f59e0b;
+}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 24px;
+}
+.header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.header h1 {
+  font-size: 28px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+.header p { color: var(--text-dim); font-size: 14px; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+  gap: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0,212,255,0.1);
+}
+.card-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-header .platform-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.platform-juejin { background: #1e80ff; color: white; }
+.platform-csdn { background: #fc5531; color: white; }
+.card-header h3 {
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card-body { padding: 20px; }
+
+.field { margin-bottom: 16px; }
+.field-label {
+  font-size: 12px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.field-value {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 14px;
+  line-height: 1.6;
+  position: relative;
+  word-break: break-all;
+  max-height: 200px;
+  overflow-y: auto;
+}
+.field-value.pre { 
+  font-family: 'Consolas', 'Monaco', monospace; 
+  font-size: 13px;
+  white-space: pre-wrap;
+}
+.copy-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: var(--accent);
+  color: #000;
+  border: none;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.copy-btn:hover { background: #00b8d9; transform: scale(1.05); }
+.copy-btn.copied { background: var(--success); color: white; }
+
+.tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.tag {
+  background: rgba(0,212,255,0.15);
+  color: var(--accent);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+}
+.tag:hover { border-color: var(--accent); background: rgba(0,212,255,0.25); }
+
+.schedule-box {
+  background: rgba(168,85,247,0.1);
+  border: 1px solid rgba(168,85,247,0.3);
+  border-radius: 8px;
+  padding: 14px;
+  margin-top: 8px;
+}
+.schedule-box h4 {
+  font-size: 13px;
+  color: var(--accent2);
+  margin-bottom: 8px;
+}
+.timeline {
+  font-size: 13px;
+  line-height: 2;
+}
+.timeline .day { color: var(--warning); font-weight: 600; }
+.timeline .action { color: var(--text-dim); }
+
+.tips-section {
+  max-width: 1400px;
+  margin: 32px auto 0;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+}
+.tips-section h2 {
+  font-size: 18px;
+  margin-bottom: 16px;
+  color: var(--accent);
+}
+.tips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+.tip-item {
+  background: rgba(0,0,0,0.2);
+  padding: 14px;
+  border-radius: 8px;
+  border-left: 3px solid var(--accent);
+}
+.tip-item strong { color: var(--accent); }
+.tip-item p { font-size: 13px; color: var(--text-dim); margin-top: 4px; line-height: 1.6; }
+
+.github-section {
+  max-width: 1400px;
+  margin: 24px auto 0;
+  background: linear-gradient(135deg, rgba(0,212,255,0.08), rgba(168,85,247,0.08));
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.github-section .info h3 { font-size: 16px; margin-bottom: 4px; }
+.github-section .info p { font-size: 13px; color: var(--text-dim); }
+.topic-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.topic-tag {
+  background: rgba(0,212,255,0.1);
+  border: 1px dashed var(--accent);
+  color: var(--accent);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.topic-tag:hover { background: rgba(0,212,255,0.2); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📝 文章发布助手</h1>
+  <p>一键复制标题、标签、正文到掘金 / CSDN · SakuraBlog 变现计划</p>
+</div>
+
+<!-- GitHub Topics 提醒 -->
+<div class="github-section">
+  <div class="info">
+    <h3>🔖 GitHub 仓库 Topics 设置</h3>
+    <p>打开 https://github.com/zxgzs/finedayblogs/settings → 往下找到 Topics → 输入以下标签</p>
+  </div>
+  <div class="topic-tags" id="topics"></div>
+</div>
+
+<div class="grid">
+
+  <!-- ========== 文章一：掘金版 ========== -->
+  <div class="card">
+    <div class="card-header">
+      <h3>📊 文章一：ECharts数据大屏</h3>
+      <span class="platform-badge platform-juejin">掘金 首发</span>
+    </div>
+    <div class="card-body">
+
+      <div class="field">
+        <div class="field-label">标题 <button class="copy-btn" data-copy="title1">复制</button></div>
+        <div class="field-value" id="title1">【原创】前端如何用ECharts做出老板夸爆的数据大屏？（附完整源码）</div>
+      </div>
+
+      <div class="field">
+        <div class="field-label">摘要/描述 <button class="copy-btn" data-copy="desc1">复制</button></div>
+        <div class="field-value" id="desc1">从零搭建SCADA级数据大屏，涵盖ECharts核心图表、自适应布局方案、数字滚动特效、边框装饰组件等实战技巧。基于真实项目经验，附完整可运行源码。</div>
+      </div>
+
+      <div class="field">
+        <div class="field-label">标签（点一下复制全部）<button class="copy-btn" data-copy="tags1">复制全部</button></div>
+        <div class="tags-list" id="tags1"></div>
+      </div>
+
+      <div class="field">
+        <div class="field-label">分类选择</div>
+        <div class="field-value">前端 > Vue.js</div>
+      </div>
+
+      <div class="schedule-box">
+        <h4>⏰ 最佳发布时间</h4>
+        <div class="timeline">
+          <span class="day">周二或周四 晚上 8:30</span><br>
+          <span class="action">发布后30分钟内回复所有评论 → 算法加权推荐</span>
+        </div>
+      </div>
+
+      <div class="field" style="margin-top:16px">
+        <div class="field-label">正文 <button class="copy-btn" data-copy="body1">复制全文</button></div>
+        <div class="field-value pre" id="body1" style="max-height:300px"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========== 文章一：CSDN版 ========== -->
+  <div class="card">
+    <div class="card-header">
+      <h3>📊 文章一：ECharts数据大屏</h3>
+      <span class="platform-badge platform-csdn">CSDN +1天</span>
+    </div>
+    <div class="card-body">
+
+      <div class="field">
+        <div class="field-label">标题（CSDN要差异化）<button class="copy-btn" data-copy="title1c">复制</button></div>
+        <div class="field-value" id="title1c">【原创】从零搭建企业级数据可视化大屏：ECharts 7章实战指南（附源码）</div>
+      </div>
+
+      <div class="field">
+        <div class="field-label">摘要 <button class="copy-btn" data-copy="desc1c">复制</button></div>
+        <div class="field-value" id="desc1c">基于真实SCADA项目经验，详解ECharts酷炫图表实现、大屏自适应方案scale/rem对比、Vue3组件封装useChart Composable、数字滚动动效、科技风边框装饰。完整源码可直接运行。</div>
+      </div>
+
+      <div class="field">
+        <div class="field-label">标签</div>
+        <div class="tags-list" id="tags1c"></div>
+      </div>
+
+      <div class="field">
+        <div class="field-label">文章类型</div>
+        <div class="field-value">✅ 原创</div>
+      </div>
+
+      <div class="schedule-box">
+        <h4>⏰ 发布时间</h4>
+        <div class="timeline">
+          <span class="day">掘金发布后 24~48 小时</span><br>
+          <span class="action">必须改写开头30%避免被判定镜像</span>
+        </div>
+      </div>
+
+      <div class="field" style="margin-top:16px">
+        <div class="field-label">注意事项</div>
+        <div class="field-value" style="font-size:13px;color:#f59e0b;">
+          ⚠️ CSDN 正文内容与掘金相同，但需要：<br>
+          1. 改写第一段和最后一段（至少30%差异）<br>
+          2. 选择 Markdown 编辑器<br>
+          3. 开启目录自动生成<br>
+          4. 发布后在底部添加原文链接指向掘金
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========== 文章二 ========== -->
+  <div class="card">
+    <div class="card-header">
+      <h3>🧩 文件二：Vue3封装ECharts组件</h3>
+      <span class="platform-badge platform-juejin">掘金 Day5</span>
+    </div>
+    <div class="card-body">
+
+      <div class="field">
+        <div class="field-label">标题 <button class="copy-btn" data-copy="title2">复制</button></div>
+        <div class="field-value" id="title2">【原创】Vue3 封装 ECharts 组件：一次编写到处复用</div>
+      </div>
+
+      <div class="field">
+        <div class="field-label">摘要 <button class="copy-btn" data-copy="desc2">复制</button></div>
+        <div class="field-value" id="desc2">告别每次手写init/setOption/resize，用Composable模式打造优雅的ECharts组件体系。支持响应式数据更新、自动销毁、主题切换。</div>
+      </div>
+
+      <div class="field">
+        <div class="field-label">标签 <button class="copy-btn" data-copy="tags2">复制全部</button></div>
+        <div class="tags-list" id="tags2"></div>
+      </div>
+
+      <div class="schedule-box">
+        <h4>⏰ 发布时间</h4>
+        <div class="timeline">
+          <span class="day">周六早 10:00</span><br>
+          <span class="action">距文章一发布后3~4天</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========== 文件三 ========== -->
+  <div class="card">
+    <div class="card-header">
+      <h3>📐 文件三：自适应方案对比</h3>
+      <span class="platform-badge platform-juejin">掘金 Day7</span>
+    </div>
+    <div class="card-body">
+
+      <div class="field">
+        <div class="field-label">标题 <button class="copy-btn" data-copy="title3">复制</button></div>
+        <div class="field-value" id="title3">【原创】数据大屏1920自适应方案：scale vs rem vs vw 全方位对比</div>
+      </div>
+
+      <div class="field">
+        <div class="field-label">摘要 <button class="copy-btn" data-copy="desc3">复制</button></div>
+        <div class="field-value" id="desc3">数据大屏投放到不同屏幕总会变形？深入对比三种主流自适应方案的原理、优缺点和适用场景，并给出最佳实践建议。</div>
+      </div>
+
+      <div class="field">
+        <div class="field-label">标签 <button class="copy-btn" data-copy="tags3">复制全部</button></div>
+        <div class="tags-list" id="tags3"></div>
+      </div>
+
+      <div class="schedule-box">
+        <h4>⏰ 发布时间</h4>
+        <div class="timeline">
+          <span class="day">周二晚 8:30</span><br>
+          <span class="action">系列完结篇，形成完整的知识体系</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- Tips Section -->
+<div class="tips-section">
+  <h2>💡 发布成功的关键Tips</h2>
+  <div class="tips-grid">
+    <div class="tip-item">
+      <strong>⏰ 时间是流量密码</strong>
+      <p>掘金流量高峰是工作日晚上 8:00-10:30，周末上午 9:00-11:00。这个时间段发，初始曝光量翻倍。</p>
+    </div>
+    <div class="tip-item">
+      <strong>💬 前30分钟定生死</strong>
+      <p>发布后立刻回复每一条评论！算法会根据互动率决定是否推到首页/推荐流。</p>
+    </div>
+    <div class="tip-item">
+      <strong>🏷️ 标签选对了曝光翻倍</strong>
+      <p>优先选「热门」标签（显示热度数字的）。ECharts 和 Vue.js 都是高流量标签。</p>
+    </div>
+    <div class="tip-item">
+      <strong>🔄 不要同时多发平台</strong>
+      <p>先掘金（快），隔1-2天再CSDN（SEO）。两边同时发会被搜索引擎判定为镜像降权。</p>
+    </div>
+    <div class="tip-item">
+      <strong>📸 封面图决定点击率</strong>
+      <p>用一张炫酷的大屏效果图做首图。可以用博客的 OG 图或者自己截一张运行效果。</p>
+    </div>
+    <div class="tip-item">
+      <strong>🔗 别忘了引流</strong>
+      <p>每篇文章底部都带上 GitHub 开源地址和博客链接。这是你免费的外链建设。</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============ 数据 ============
+
+const topicsData = [
+  'vue3', 'blog-template', 'echarts', 'data-visualization',
+  'typescript', 'vite', 'element-plus', 'sakura',
+  'glassmorphism', 'dashboard', 'frontend'
+];
+
+const tagsMap = {
+  tags1: ['ECharts','Vue.js','数据可视化','数据大屏','前端','TypeScript','源码分享'],
+  tags1c: ['ECharts','Vue.js','数据可视化','数据大屏','前端','TypeScript','源码分享','SCADA'],
+  tags2: ['ECharts','Vue.js','组件封装','CompositionAPI','TypeScript','前端进阶'],
+  tags3: ['CSS','数据大屏','自适应','前端','响应式','Vue']
+};
+
+// 文章一正文（精简版用于预览）
+const body1Text = `> 做过一个真实的 SCADA 数据大屏项目后，我总结了一套从零到上线的完整方法论。
+
+## 为什么写这篇文章？
+
+市面上的 ECharts 教程大多停留在"画一个柱状图"的阶段。但真正的工作场景中：
+- 🔥 酷炫的视觉效果 — 渐变、发光、粒子背景
+- 📊 多图表联动 — 点击地图，其他图表跟着变  
+- 🖥️ 大屏自适应 — 投影仪、拼接屏都能完美展示
+- ⚡ 实时数据刷新 — WebSocket 推送
+
+## 第一章：大屏设计规范
+
+### 分辨率选择
+标准大屏分辨率：1920 × 1080（16:9）
+拼接屏常见：3840 × 2160 / 5760 × 2160
+适配策略：设计稿按 1920×1080，运行时 scale 缩放
+
+### 配色方案（深色科技风）
+--bg-primary: #0a1a3a;
+--bg-secondary: #0d213b;
+--accent-cyan: #00d4ff;
+
+## 第二章：ECharts 核心图表实战
+
+### 酷炫柱状图（渐变 + 圆角 + 发光）
+关键技巧：
+• LinearGradient 让柱子有质感
+• shadowBlur 制造发光效果
+• animationDelay 让柱子依次升起
+
+### 环形进度图（大屏KPI标配）
+
+### 折线面积图（趋势数据的最佳表达）
+
+## 第三章：大屏幕自适应 — scale 方案（推荐）
+
+## 第四章：数字滚动 & 特效组件
+• NumberRoll 数字滚动（easeOutExpo缓动）
+• PanelBorder 科技风边框装饰（四角L型+渐变标题栏）
+
+## 第五章：Vue3 useChart Composable 封装
+
+## 第六章：性能优化
+• progressive 分片渲染
+• 节流 resize
+• 数据采样
+
+---
+完整代码请查看博客原文或GitHub仓库 👇
+博客：https://fineday.vip
+开源：https://github.com/zxgzs/finedayblogs`;
+
+// ============ 初始化渲染 ============
+
+function renderTags(containerId, tags) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  tags.forEach(tag => {
+    const span = document.createElement('span');
+    span.className = 'tag';
+    span.textContent = tag;
+    span.onclick = () => copyToClipboard(tag);
+    el.appendChild(span);
+  });
+}
+
+function renderTopics() {
+  const el = document.getElementById('topics');
+  if (!el) return;
+  topicsData.forEach(t => {
+    const span = document.createElement('span');
+    span.className = 'topic-tag';
+    span.textContent = t;
+    span.onclick = () => copyToClipboard(t);
+    el.appendChild(span);
+  });
+}
+
+// ============ 复制功能 ============
+async function copyToClipboard(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    // 找到触发的按钮
+    const btns = document.querySelectorAll('.copy-btn');
+    return true;
+  } catch (e) {
+    // fallback
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    return true;
+  }
+}
+
+function showCopied(btn) {
+  const orig = btn.textContent;
+  btn.textContent = '✅ 已复制';
+  btn.classList.add('copied');
+  setTimeout(() => {
+    btn.textContent = orig;
+    btn.classList.remove('copied');
+  }, 1500);
+}
+
+document.querySelectorAll('.copy-btn').forEach(btn => {
+  btn.addEventListener('click', async (e) => {
+    e.stopPropagation();
+    const targetId = btn.dataset.copy;
+    const targetEl = document.getElementById(targetId);
+    if (!targetEl) return;
+    
+    let text = targetEl.textContent || targetEl.innerText;
+    
+    // 如果是标签列表，拼接所有tag
+    if (targetId.startsWith('tags')) {
+      const tags = tagsMap[targetId] || [];
+      text = tags.join(', ');
+    }
+    
+    await copyToClipboard(text);
+    showCopied(btn);
+  });
+});
+
+// Init
+renderTopics();
+Object.entries(tagsMap).forEach(([id, tags]) => renderTags(id, tags));
+
+// Body preview
+const bodyEl = document.getElementById('body1');
+if (bodyEl) bodyEl.textContent = body1Text;
+
+</script>
+</body>
+</html>
