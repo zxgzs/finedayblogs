@@ -480,8 +480,7 @@ function useWindowSize() {
     likes: 29,
     collects: 12,
     author: '晴天'
-  }
-]
+  },
 
   // ========== 爆款文章：ECharts数据大屏 ==========
   {
