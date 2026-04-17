@@ -716,7 +716,7 @@ function setRem() {
   const html = document.documentElement
   const width = html.clientWidth
   // 设计稿宽度 1920px 对应 html font-size: 100px
-  html.style.fontSize = \`${(width / 1920) * 100}px\`
+  html.style.fontSize = \`\${(width / 1920) * 100}px\`
 }
 \`\`\`
 
@@ -1407,7 +1407,7 @@ export function initRem(designWidth = DESIGN_WIDTH) {
     // 1920px → html font-size = 100px
     // 那么 1rem = 设计稿上的 100px
     // 设计稿 20px 字体 → 0.2rem
-    html.style.fontSize = \`${(width / designWidth) * 100}px\`
+    html.style.fontSize = \`\${(width / designWidth) * 100}px\`
   }
 
   setRem()
