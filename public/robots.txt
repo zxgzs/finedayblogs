@@ -1,5 +1,5 @@
 # robots.txt for 晴天的博客
-# https://yourblog.com
+# https://fineday.vip
 
 User-agent: *
 Allow: /
@@ -10,7 +10,7 @@ Disallow: /node_modules/
 Disallow: /src/
 
 # 站点地图
-Sitemap: https://yourblog.com/sitemap.xml
+Sitemap: https://fineday.vip/sitemap.xml
 
 # 爬取延迟
 Crawl-delay: 1

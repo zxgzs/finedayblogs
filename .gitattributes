@@ -1,0 +1,43 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Markdown
+*.md text linguist-generated
+*.md text eol=lf
+
+# Vue / JS / TS
+*.vue text linguist-language=Vue
+*.ts text linguist-language=TypeScript
+*.js text linguist-language=JavaScript
+*.json text linguist-language=JSON
+
+# Styles
+*.scss text linguist-language=SCSS
+*.css text linguist-language=CSS
+
+# Config files
+*.yaml text
+*.yml text
+*.toml text
+
+# Images (binary)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.svg text
+
+# Fonts (binary)
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+
+# Live2D models (binary + large)
+public/models/ binary
+
+# Lock files for dependency resolution
+package-lock.json text
+yarn.lock text linguist-generated

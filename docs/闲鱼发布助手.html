@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>🐟 闲鱼发布助手 — 一键复制</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: #0f1923;
+  color: #e0f0ff;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.header {
+  text-align: center;
+  padding: 30px 20px;
+  background: linear-gradient(135deg, #1a2a4a 0%, #0d213b 100%);
+  border-radius: 16px;
+  margin-bottom: 24px;
+  border: 1px solid rgba(0,212,255,0.15);
+}
+.header h1 { font-size: 28px; color: #00d4ff; margin-bottom: 8px; }
+.header p { font-size: 14px; color: #8ab4d8; }
+
+.products { display: grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap: 20px; max-width: 1400px; margin: 0 auto; }
+
+.product-card {
+  background: rgba(10,42,74,0.7);
+  border-radius: 12px;
+  border: 1px solid rgba(0,212,255,0.12);
+  overflow: hidden;
+}
+.card-header {
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(0,212,255,0.08);
+}
+.card-header .badge {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+.badge-main { background: rgba(0,212,255,0.15); color: #00d4ff; }
+.badge-normal { background: rgba(66,184,131,0.15); color: #42b883; }
+.badge-new { background: rgba(255,183,197,0.15); color: #ffb7c5; }
+
+.card-header h2 { font-size: 17px; font-weight: 600; }
+.field { padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.field:last-child { border-bottom: none; }
+.field-label {
+  font-size: 12px;
+  color: #6a8aaa;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: #e0f0ff;
+  word-break: break-all;
+  line-height: 1.5;
+}
+
+.desc-text {
+  font-size: 13px;
+  color: #a0c0dd;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  max-height: 400px;
+  overflow-y: auto;
+  font-family: 'Consolas', 'Monaco', monospace;
+}
+
+.tags-text {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.tag {
+  font-size: 12px;
+  padding: 4px 10px;
+  background: rgba(0,212,255,0.08);
+  border: 1px solid rgba(0,212,255,0.15);
+  border-radius: 14px;
+  color: #8ab4d8;
+}
+
+.price-text {
+  font-size: 22px;
+  font-weight: bold;
+  color: #ff6b35;
+}
+
+.copy-btn {
+  background: linear-gradient(135deg, #00d4ff, #0078ff);
+  color: #fff;
+  border: none;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.copy-btn:hover { transform: scale(1.05); box-shadow: 0 2px 12px rgba(0,212,255,0.3); }
+.copy-btn.copied { background: linear-gradient(135deg, #42b883, #2ea44e); }
+
+.steps {
+  max-width: 1400px;
+  margin: 24px auto 0;
+  background: rgba(10,42,74,0.5);
+  border-radius: 12px;
+  border: 1px solid rgba(255,193,7,0.15);
+  padding: 20px 24px;
+}
+.steps h3 { color: #ffc107; font-size: 16px; margin-bottom: 12px; }
+.steps ol { padding-left: 20px; color: #a0c0dd; font-size: 14px; line-height: 2; }
+.steps li mark { background: rgba(0,212,255,0.2); color: #00d4ff; padding: 0 4px; border-radius: 3px; }
+
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, #42b883, #2ea44e);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: all 0.3s;
+  z-index: 999;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0,212,255,0.2); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast">✅ 已复制到剪贴板！</div>
+
+<div class="header">
+  <h1>🐟 闲鱼发布助手</h1>
+  <p>点击「复制」按钮 → 切换到闲鱼 → 粘贴即可发布（每个字段都帮你分好了）</p>
+</div>
+
+<!-- ========== 商品A：数据大屏定制 ========== -->
+<div class="products">
+
+<div class="product-card">
+  <div class="card-header">
+    <h2>📊 商品 A · 数据大屏定制</h2>
+    <span class="badge badge-main">⭐ 主推</span>
+  </div>
+  
+  <div class="field">
+    <div class="field-label">
+      标题
+      <button class="copy-btn" onclick="copyText('titleA')">复制</button>
+    </div>
+    <div class="title-text" id="titleA">✨ECharts数据大屏定制｜SCADA可视化｜Vue3+TS工业风Dashboard开发</div>
+  </div>
+
+  <div class="field">
+    <div class="field-label">
+      描述
+      <button class="copy-btn" onclick="copyText('descA')">复制</button>
+    </div>
+    <div class="desc-text" id="descA">👋 你好！我是晴天，5年前端开发经验。
+
+【我能做什么】
+📊 数据可视化大屏 / Dashboard 定制开发
+🏭 工业风 SCADA 级监控大屏
+⚡ 实时数据监控面板（WebSocket对接）
+📈 运营分析看板 / 销售数据大盘
+
+【技术栈】
+Vue 3 + TypeScript + ECharts + Element Plus + Vite
+
+【我的真实项目经验】（不是纸上谈兵）
+
+✅ 做过真实的 SCADA 能源管理系统
+   — 用能单元树选择器、设备绑定、实时数据监控
+   — 从 Vue2 迁移到 Vue3 的完整实战经验
+   
+✅ ECharts 深度玩家
+   — 气泡图拖拽交互实现
+   — requestAnimationFrame 动画性能优化  
+   — 3D 饼图等高级图表落地
+   
+✅ 数据大屏自适应方案
+   — scale 缩放 / rem 方案 / vwvh 对比实践
+   — 投影仪、拼接屏、各种分辨率都踩过坑
+
+✅ UI 设计能力在线
+   — 科技 HUD 风（暗色主题+发光边框+网格背景）
+   — 玻璃态毛玻璃效果（backdrop-filter）
+   — CSS 动效：极光、粒子、故障风、磁吸效果
+
+【服务套餐】
+
+📦 基础版 ──────── ￥2999 起
+  • 图表数量：5个以内
+  • 包含：柱状/折线/饼图/数字KPI/表格
+  • 适配：1920×1080 自适应
+  • 交付周期：3-5个工作日
+  适合：简单数据展示页、Demo演示
+
+📦 标准版 ──────── ￥5999 起  
+  • 图表数量：8-10个 + 地图
+  • 包含：上述全部 + 中国地图/热力图 + 边框动效
+  • 特效：数字滚动、渐变发光、hover动画
+  • 交付周期：5-8个工作日
+  适合：企业Dashboard、运营中心大屏
+
+📦 高定版 ──────── ￥9999 起
+  • SCADA 级工业监控大屏
+  • 包含：标准版全部 + 实时数据对接(WS) + 联动交互
+  • 特效：粒子背景、扫描线、状态闪烁、告警动画
+  • 架构：组件化封装，支持后续扩展
+  • 交付周期：8-15个工作日
+  适合：工业监控、IoT平台、指挥中心
+
+【为什么选我】
+
+① 有真实 SCADA 项目经验，不是照着教程抄的
+② 从 Vue2 到 Vue3 全流程迁移都做过，代码质量有保证
+③ 设计审美过关（可参考我的博客 fineday.vip）
+④ 一手开发不转包，沟通响应快
+
+⏰ 交付流程
+  需求确认 → 设计稿确认 → 开发 → 预览 → 修改 → 交付
+  支持一轮免费修改，满意为止
+
+📩 点击「我想要」或直接私信聊需求~
+  告诉我：做什么 + 大概多少个图 + 有没有设计稿/参考图
+  我快速给你报价和时间评估</div>
+  </div>
+
+  <div class="field">
+    <div class="field-label">
+      价格区间
+      <span style="color:#ff6b35;font-weight:bold;">￥2999 ~ ￥9999</span>
+    </div>
+  </div>
+
+  <div class="field">
+    <div class="field-label">标签（手动输入）</div>
+    <div class="tags-text">
+      <span class="tag">数据大屏</span><span class="tag">ECharts</span><span class="tag">前端开发</span><span class="tag">Vue3</span><span class="tag">可视化</span><span class="tag">SCADA</span><span class="tag">TypeScript</span><span class="tag">网站定制</span>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 商品B：Vue3前端开发 ========== -->
+<div class="product-card">
+  <div class="card-header">
+    <h2>🖥️ 商品 B · Vue3 前端开发</h2>
+    <span class="badge badge-normal">走量</span>
+  </div>
+  
+  <div class="field">
+    <div class="field-label">
+      标题
+      <button class="copy-btn" onclick="copyText('titleB')">复制</button>
+    </div>
+    <div class="title-text" id="titleB">🔥Vue3+TS前端开发｜页面制作｜ECharts图表｜组件封装｜H5活动页</div>
+  </div>
+
+  <div class="field">
+    <div class="field-label">
+      描述
+      <button class="copy-btn" onclick="copyText('descB')">复制</button>
+    </div>
+    <div class="desc-text" id="descB">👋 专业前端开发者，Vue3 + TypeScript 日用技术栈。
+
+【擅长领域】
+
+🖥️ Vue3 项目开发
+   — 新项目搭建（Vite + Vue3 + TS + EP）
+   — 业务页面开发 / 后台管理系统
+   — 复杂表单 / 表格 / 权限管理
+   — Vue2 → Vue3 项目迁移（有实战经验）
+
+🧩 组件封装 & 公共库
+   — ECharts 图表组件封装（useChart composable）
+   — 业务组件抽象（文件上传、富文本、树形选择器）
+   — Element Plus 二次封装（ProTable / SearchForm 等）
+
+🎨 CSS 动效 & 视觉还原
+   — 高保真 UI 还原（设计稿→像素级实现）
+   — CSS 动画（过渡、关键帧、滚动视差）
+   — 特殊效果（玻璃态、毛玻璃、科技风边框）
+
+📱 H5 活动页 / 移动端页面
+   — 响应式适配 / 移动端优先
+   — 动画交互丰富的营销页
+   — 微信内嵌页兼容处理
+
+【参考作品】
+• 我的技术博客：fineday.vip（Vue3 + TS + 双主题 + 粒子特效）
+• 可提供更多项目截图和在线 Demo
+
+💰 价格参考
+  单页面：￥500-1500    （简单/复杂不等）
+  活动H5：￥1500-3000   （含动效）
+  Admin后台模块：￥2000-5000
+  组件库定制：￥1000-5000/套
+  Vue2→3迁移：￥3000起  （视项目规模）
+
+⚡ 快速响应，质量保证，修改到满意为止
+📬 私聊获取报价，欢迎带需求来聊~</div>
+  </div>
+
+  <div class="field">
+    <div class="field-label">
+      价格区间
+      <span style="color:#ff6b35;font-weight:bold;">￥500 ~ ￥5000</span>
+    </div>
+  </div>
+
+  <div class="field">
+    <div class="field-label">标签（手动输入）</div>
+    <div class="tags-text">
+      <span class="tag">前端开发</span><span class="tag">Vue3</span><span class="tag">TypeScript</span><span class="tag">H5</span><span class="tag">组件封装</span><span class="tag">ECharts</span>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 商品C：技术咨询 ========== -->
+<div class="product-card">
+  <div class="card-header">
+    <h2>💻 商品 C · 技术咨询</h2>
+    <span class="badge badge-normal">高时薪</span>
+  </div>
+  
+  <div class="field">
+    <div class="field-label">
+      标题
+      <button class="copy-btn" onclick="copyText('titleC')">复制</button>
+    </div>
+    <div class="title-text" id="titleC">💻前端技术顾问｜Vue3+ECharts方向｜代码审查｜性能优化｜面试指导</div>
+  </div>
+
+  <div class="field">
+    <div class="field-label">
+      描述
+      <button class="copy-btn" onclick="copyText('descC')">复制</button>
+    </div>
+    <div class="desc-text" id="descC">提供专业的1对1技术咨询，专注以下方向：
+
+【咨询范围】
+
+🔍 代码审查 & 优化建议
+   — Vue3 / TypeScript 代码质量 review
+   — ECharts 性能问题排查（大数据量卡顿、渲染慢）
+   — 组件设计合理性评审
+   — 发现潜在 bug 和性能瓶颈
+
+🏗️ 技术选型 & 架构设计
+   — 新项目技术方案评估
+   — 状态管理方案选择（Pinia / Vuex / Provide/Inject）
+   — 大屏架构设计（scale/rem/混合方案选型）
+   — 工程化规范制定（ESLint/Prettier/Husky）
+
+⚡ 性能问题专项解决
+   — 首屏加载慢？打包体积大？
+   — ECharts 图表渲染卡顿？
+   — 页面动画掉帧？
+   — 内存泄漏排查？
+
+📚 个人成长指导
+   — 前端学习路线规划
+   — 面试准备 & 简历优化
+   — 跳槽/涨薪建议
+   — 从初级到中高级的成长路径
+
+【我的资历】
+
+• 5年前端开发经验
+• Vue3 + TypeScript + ECharts 日常使用
+• 做过 SCADA 能源管理系统（工业级项目）
+• 从 Vue2 到 Vue3 的完整迁移实战
+• 独立开发并上线个人博客（fineday.vip）
+
+💵 咨询费用
+  • 文字咨询：￥99/次（详细文字回复，附代码示例）
+  • 语音通话：￥200/小时（腾讯会议/钉钉）
+  • 代码深度Review：￥300起（出具书面评审报告）
+  • 长期技术顾问：￥800/月（每周1次答疑+随时文字咨询）
+
+适合人群：
+✅ 初/中级前端开发者想提升
+✅ 独立开发者需要技术讨论
+✅ 小团队缺前端 Tech Lead
+✅ 准备面试/跳槽的同行
+
+📬 私聊说明你的情况，我来帮你匹配最合适的方式~</div>
+  </div>
+
+  <div class="field">
+    <div class="field-label">
+      价格区间
+      <span style="color:#ff6b35;font-weight:bold;">￥99 ~ ￥800</span>
+    </div>
+  </div>
+
+  <div class="field">
+    <div class="field-label">标签（手动输入）</div>
+    <div class="tags-text">
+      <span class="tag">技术咨询</span><span class="tag">代码审查</span><span class="tag">Vue3</span><span class="tag">面试指导</span><span class="tag">ECharts</span>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 商品D：博客网站定制 ========== -->
+<div class="product-card">
+  <div class="card-header">
+    <h2>🌸 商品 D · 博客网站定制</h2>
+    <span class="badge badge-new">🆕 案例</span>
+  </div>
+  
+  <div class="field">
+    <div class="field-label">
+      标题
+      <button class="copy-btn" onclick="copyText('titleD')">复制</button>
+    </div>
+    <div class="title-text" id="titleD">🌸个人博客网站定制｜Vue3精美模板｜二次元/科技双主题｜SEO优化</div>
+  </div>
+
+  <div class="field">
+    <div class="field-label">
+      描述
+      <button class="copy-btn" onclick="copyText('descD')">复制</button>
+    </div>
+    <div class="desc-text" id="descD">帮你打造一个「别人点进来就哇塞」的个人博客/作品集网站。
+
+【我能做出什么效果？】
+
+直接看我做的 → fineday.vip ✨
+
+包含这些特性：
+🌸 樱花主题 — 粉色渐变 + 樱花飘落粒子特效
+🌙 科技HUD主题 — 暗色背景 + 发光边框 + 网格装饰
+🔄 明暗主题一键切换
+👘 Live2D 看板娘（多种模型可选）
+📱 完美移动端适配
+⚡ Vite 构建，秒级加载
+🔍 SEO 友好（sitemap/OG图/结构化数据）
+📝 Markdown 文章系统 + 代码高亮
+
+【套餐】
+
+🌱 基础博客 — ￥1999
+  • 精美主题（二选一或自定义配色）
+  • 文章/标签/归档系统
+  • 响应式布局
+  • SEO基础配置
+  • 5个工作日交付
+
+🌳 进阶博客 — ￥3999
+  • 基础版全部 +
+  • 双主题切换
+  • 粒子特效（樱花/星星等可选）
+  • 相册/Gallery功能
+  • 友链/留言板
+  • Google Analytics + 百度统计
+
+🌳 高级定制 — ￥5999+
+  • 进阶版全部 +
+  • Live2D 看板娘
+  • 自定义动效（按需设计）
+  • Admin后台管理
+  • 部署上线（含域名/服务器配置指导）
+  • 1个月免费维护
+
+💡 适合谁？
+  • 技术博主想有个漂亮的家
+  • 程序员想做个人作品集网站
+  • 想学 Vue3 的同学想要一个练手项目参考
+  • 想要一个不像模板的模板 😄
+
+📩 私聊告诉我你的想法，我来帮你设计~</div>
+  </div>
+
+  <div class="field">
+    <div class="field-label">
+      价格区间
+      <span style="color:#ff6b35;font-weight:bold;">￥1999 ~ ￥5999</span>
+    </div>
+  </div>
+
+  <div class="field">
+    <div class="field-label">标签（手动输入）</div>
+    <div class="tags-text">
+      <span class="tag">博客网站</span><span class="tag">Vue3</span><span class="tag">个人网站</span><span class="tag">SEO优化</span><span class="tag">网站定制</span>
+    </div>
+  </div>
+</div>
+
+</div><!-- end products -->
+
+<div class="steps">
+  <h3>📋 发布步骤</h3>
+  <ol>
+    <li>打开闲鱼 App 或 <mark>goofish.com/sell</mark>（需要登录）</li>
+    <li>点击<mark>「发布闲置」</mark></li>
+    <li>点标题旁输入框 → 回来点本页对应商品的<strong>「复制」</strong> → 粘贴</li>
+    <li>点描述文本框 → 点<strong>「复制」</strong>描述 → 粘贴</li>
+    <li>填写价格（参考上面的价格区间）</li>
+    <li>手动输入标签（已列出推荐标签）</li>
+    <li>上传图片：<strong>首图用博客截图(fineday.vip)</strong>，其余用项目截图/GIF</li>
+    <li>点击<strong>发布</strong> ✅</li>
+  </ol>
+</div>
+
+<script>
+function copyText(id) {
+  const el = document.getElementById(id)
+  const text = el.innerText || el.textContent
+  
+  navigator.clipboard.writeText(text).then(() => {
+    // 找到对应的按钮显示已复制状态
+    const btn = event.target
+    const original = btn.textContent
+    btn.textContent = '已复制 ✓'
+    btn.classList.add('copied')
+    
+    // 显示toast
+    const toast = document.getElementById('toast')
+    toast.classList.add('show')
+    
+    setTimeout(() => {
+      btn.textContent = original
+      btn.classList.remove('copied')
+      toast.classList.remove('show')
+    }, 1800)
+  }).catch(() => {
+    // fallback for older browsers
+    const ta = document.createElement('textarea')
+    ta.value = text
+    document.body.appendChild(ta)
+    ta.select()
+    document.execCommand('copy')
+    document.body.removeChild(ta)
+    
+    const btn = event.target
+    btn.textContent = '已复制 ✓'
+    setTimeout(() => { btn.textContent = '复制' }, 1800)
+  })
+}
+</script>
+
+</body>
+</html>

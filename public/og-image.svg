@@ -1,0 +1,213 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <!-- 背景渐变 -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a1a3a"/>
+      <stop offset="50%" style="stop-color:#0d213b"/>
+      <stop offset="100%" style="stop-color:#071226"/>
+    </linearGradient>
+
+    <!-- 主标题发光 -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- 柔和光晕 -->
+    <radialGradient id="glowOrb1" cx="80%" cy="20%" r="40%">
+      <stop offset="0%" style="stop-color:rgba(0,212,255,0.15)"/>
+      <stop offset="100%" style="stop-color:rgba(0,212,255,0)"/>
+    </radialGradient>
+    <radialGradient id="glowOrb2" cx="15%" cy="75%" r="35%">
+      <stop offset="0%" style="stop-color:rgba(255,183,197,0.12)"/>
+      <stop offset="100%" style="stop-color:rgba(255,183,197,0)"/>
+    </radialGradient>
+
+    <!-- 图表线条渐变 -->
+    <linearGradient id="chartLine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00d4ff;stop-opacity:0"/>
+      <stop offset="30%" style="stop-color:#00d4ff;stop-opacity:1"/>
+      <stop offset="70%" style="stop-color:#0078ff;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#0078ff;stop-opacity:0"/>
+    </linearGradient>
+
+    <!-- 柱状图渐变 -->
+    <linearGradient id="barGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#00d4ff"/>
+      <stop offset="100%" style="stop-color:#0078ff"/>
+    </linearGradient>
+
+    <!-- 文字渐变 -->
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ffffff"/>
+      <stop offset="100%" style="stop-color:#e0f0ff"/>
+    </linearGradient>
+
+    <!-- 副标题渐变 -->
+    <linearGradient id="subGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00d4ff"/>
+      <stop offset="50%" style="stop-color:#8ab4d8"/>
+      <stop offset="100%" style="stop-color:#ffc107"/>
+    </linearGradient>
+
+    <!-- 樱花粉渐变 -->
+    <linearGradient id="sakuraGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffb7c5"/>
+      <stop offset="100%" style="stop-color:#ff9aa8"/>
+    </linearGradient>
+
+    <!-- 裁切路径 - 圆角矩形 -->
+    <clipPath id="cardClip">
+      <rect x="60" y="200" width="1080" height="230" rx="16" ry="16"/>
+    </clipPath>
+  </defs>
+
+  <!-- 背景 -->
+  <rect width="1200" height="630" fill="url(#bgGrad)"/>
+
+  <!-- 光晕装饰 -->
+  <ellipse cx="960" cy="126" rx="300" ry="180" fill="url(#glowOrb1)"/>
+  <ellipse cx="180" cy="472" rx="260" ry="160" fill="url(#glowOrb2)"/>
+
+  <!-- 网格背景线（科技感） -->
+  <g stroke="#1a3a5c" stroke-width="0.5" opacity="0.3">
+    <!-- 横线 -->
+    <line x1="0" y1="150" x2="1200" y2="150"/>
+    <line x1="0" y1="315" x2="1200" y2="315"/>
+    <line x1="0" y1="480" x2="1200" y2="480"/>
+    <!-- 竖线 -->
+    <line x1="240" y1="0" x2="240" y2="630"/>
+    <line x1="600" y1="0" x2="600" y2="630"/>
+    <line x1="960" y1="0" x2="960" y2="630"/>
+  </g>
+
+  <!-- 装饰性图表元素 - 背景柱状图 -->
+  <g opacity="0.15">
+    <rect x="720" y="380" width="28" height="170" rx="4" fill="#00d4ff"/>
+    <rect x="760" y="310" width="28" height="240" rx="4" fill="#00d4ff"/>
+    <rect x="800" y="340" width="28" height="210" rx="4" fill="#00d4ff"/>
+    <rect x="840" y="270" width="28" height="280" rx="4" fill="#00d4ff"/>
+    <rect x="880" y="230" width="28" height="320" rx="4" fill="#00d4ff"/>
+    <rect x="920" y="290" width="28" height="260" rx="4" fill="#00d4ff"/>
+    <rect x="960" y="200" width="28" height="350" rx="4" fill="#00d4ff"/>
+    <rect x="1000" y="250" width="28" height="300" rx="4" fill="#00d4ff"/>
+    <rect x="1040" y="330" width="28" height="220" rx="4" fill="#00d4ff"/>
+    <rect x="1080" y="370" width="28" height="180" rx="4" fill="#00d4ff"/>
+  </g>
+
+  <!-- 装饰性折线 -->
+  <g opacity="0.2">
+    <polyline 
+      points="700,450 760,400 820,420 880,350 940,370 1000,300 1060,320 1120,270"
+      fill="none" stroke="#00d4ff" stroke-width="2"/>
+    <!-- 数据点 -->
+    <circle cx="700" cy="450" r="3" fill="#00d4ff"/>
+    <circle cx="760" cy="400" r="3" fill="#00d4ff"/>
+    <circle cx="820" cy="420" r="3" fill="#00d4ff"/>
+    <circle cx="880" cy="350" r="4" fill="#00d4ff"/>
+    <circle cx="940" cy="370" r="3" fill="#00d4ff"/>
+    <circle cx="1000" cy="300" r="3" fill="#00d4ff"/>
+    <circle cx="1060" cy="320" r="3" fill="#00d4ff"/>
+    <circle cx="1120" cy="270" r="4" fill="#00d4ff"/>
+  </g>
+
+  <!-- 左上角装饰：代码括号 -->
+  <text x="50" y="90" font-family="Consolas, Monaco, monospace" font-size="48" fill="#1a3a5c" opacity="0.6">&lt;/&gt;</text>
+
+  <!-- 右下角 URL -->
+  <text x="1100" y="595" font-family="'SF Pro Display', 'PingFang SC', sans-serif" font-size="16" fill="#3a5a7c" text-anchor="end">fineday.vip</text>
+
+  <!-- ====== 主内容区：卡片 ====== -->
+  <rect x="60" y="185" width="1080" height="260" rx="20" ry="20" fill="rgba(10,42,74,0.6)" stroke="rgba(0,212,255,0.12)" stroke-width="1.5"/>
+
+  <!-- 卡片左边缘装饰线 -->
+  <rect x="60" y="185" width="4" height="260" rx="2" ry="0" fill="url(#barGrad)" opacity="0.8"/>
+
+  <!-- ====== 主标题 ====== -->
+  <text x="600" y="275" font-family="'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif" font-size="56" font-weight="bold" fill="url(#textGrad)" text-anchor="middle" filter="url(#glow)">
+    晴天的博客
+  </text>
+
+  <!-- 标题下方装饰线 -->
+  <line x1="480" y1="298" x2="720" y2="298" stroke="url(#subGrad)" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+
+  <!-- ====== 副标题标签组 ====== -->
+  <g transform="translate(600, 340)">
+    <!-- 标签背景 -->
+    <rect x="-280" y="-18" width="560" height="40" rx="20" fill="rgba(0,212,255,0.08)" stroke="rgba(0,212,255,0.2)" stroke-width="1"/>
+
+    <!-- Vue3 -->
+    <text x="-190" y="7" font-family="'SF Pro Display', 'PingFang SC', sans-serif" font-size="17" fill="#42b883" text-anchor="middle" font-weight="600">Vue 3</text>
+
+    <!-- 分隔符 -->
+    <text x="-115" y="7" font-family="sans-serif" font-size="14" fill="#3a5a7c" text-anchor="middle">•</text>
+
+    <!-- TypeScript -->
+    <text x="-40" y="7" font-family="'SF Pro Display', 'PingFang SC', sans-serif" font-size="17" fill="#3178c6" text-anchor="middle" font-weight="600">TypeScript</text>
+
+    <!-- 分隔符 -->
+    <text x="55" y="7" font-family="sans-serif" font-size="14" fill="#3a5a7c" text-anchor="middle">•</text>
+
+    <!-- ECharts -->
+    <text x="135" y="7" font-family="'SF Pro Display', 'PingFang SC', sans-serif" font-size="17" fill="#00d4ff" text-anchor="middle" font-weight="600">ECharts</text>
+
+    <!-- 分隔符 -->
+    <text x="215" y="7" font-family="sans-serif" font-size="14" fill="#3a5a7c" text-anchor="middle">•</text>
+
+    <!-- 数据可视化 -->
+    <text x="305" y="7" font-family="'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="17" fill="#ffc107" text-anchor="end" font-weight="500">数据可视化</text>
+  </g>
+
+  <!-- ====== Slogan ====== -->
+  <text x="600" y="410" font-family="'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="18" fill="#6a8aaa" text-anchor="middle" letter-spacing="4">
+    专注前端技术分享 · 数据可视化实战 · 大屏开发经验
+  </text>
+
+  <!-- ====== 樱花花瓣装饰（左侧） ====== -->
+  <g transform="translate(130, 230) rotate(-25)" opacity="0.85">
+    <ellipse cx="0" cy="0" rx="22" ry="14" fill="url(#sakuraGrad)" opacity="0.9"/>
+    <ellipse cx="-10" cy="-8" rx="14" ry="9" fill="#ffd1dc" opacity="0.7" transform="rotate(-30)"/>
+  </g>
+  
+  <g transform="translate(175, 395) rotate(15)" opacity="0.6">
+    <ellipse cx="0" cy="0" rx="16" ry="10" fill="url(#sakuraGrad)" opacity="0.8"/>
+    <ellipse cx="6" cy="5" rx="10" ry="6" fill="#ffd1dc" opacity="0.5" transform="rotate(20)"/>
+  </g>
+
+  <g transform="translate(95, 365) rotate(-45)" opacity="0.45">
+    <ellipse cx="0" cy="0" rx="12" ry="7" fill="url(#sakuraGrad)" opacity="0.7"/>
+  </g>
+
+  <!-- ====== 粒子/星点装饰 ====== -->
+  <g fill="#00d4ff">
+    <circle cx="850" cy="145" r="2" opacity="0.6"/>
+    <circle cx="1020" cy="180" r="1.5" opacity="0.4"/>
+    <circle cx="1100" cy="420" r="2.5" opacity="0.5"/>
+    <circle cx="680" cy="500" r="1.5" opacity="0.3"/>
+    <circle cx="380" cy="155" r="2" opacity="0.4"/>
+    <circle cx="280" cy="520" r="1.5" opacity="0.35"/>
+    <circle cx="900" cy="520" r="2" opacity="0.45"/>
+    <circle cx="1150" cy="100" r="1.5" opacity="0.3"/>
+  </g>
+  <g fill="#ffc107">
+    <circle cx="1050" cy="130" r="1.5" opacity="0.5"/>
+    <circle cx="750" cy="540" r="2" opacity="0.4"/>
+    <circle cx="180" cy="165" r="1.5" opacity="0.35"/>
+  </g>
+  <g fill="#ffb7c5">
+    <circle cx="230" cy="290" r="1.5" opacity="0.5"/>
+    <circle cx="1130" cy="360" r="2" opacity="0.4"/>
+  </g>
+
+  <!-- 右侧装饰：小图标风格的数据符号 -->
+  <g transform="translate(1040, 215)" opacity="0.2">
+    <rect x="0" y="20" width="8" height="35" rx="2" fill="#00d4ff"/>
+    <rect x="12" y="5" width="8" height="50" rx="2" fill="#00d4ff"/>
+    <rect x="24" y="30" width="8" height="25" rx="2" fill="#00d4ff"/>
+    <rect x="36" y="0" width="8" height="55" rx="2" fill="#ffc107"/>
+    <rect x="48" y="15" width="8" height="40" rx="2" fill="#00d4ff"/>
+  </g>
+</svg>
