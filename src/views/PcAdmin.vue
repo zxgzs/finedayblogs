@@ -17,6 +17,7 @@ const searching = ref(false)
 const searchMsg = ref('')
 const locating = ref(false)
 const locateMsg = ref('')
+const panelOpen = ref(false)
 
 let map = null
 let savedGroup = null
@@ -86,6 +87,7 @@ async function searchLocation() {
       .openTooltip()
     map.setView([r.lat, r.lng], 16)
     searchMsg.value = `已定位到：${r.name}`
+    panelOpen.value = false
   } catch (e) {
     searchMsg.value = e.message
   } finally {
@@ -129,6 +131,7 @@ function locateMe() {
 
       map.fitBounds(locateCircle.getBounds().pad(1.5), { maxZoom: 18 })
       locateMsg.value = `当前位置：${lat.toFixed(6)}, ${lng.toFixed(6)}`
+      panelOpen.value = false
     },
     (err) => {
       locating.value = false
@@ -197,6 +200,7 @@ function focusFence(f) {
   } else {
     map.fitBounds(L.latLngBounds(f.coordinates.map((c) => [c[1], c[0]])))
   }
+  panelOpen.value = false
 }
 
 onMounted(() => {
@@ -214,7 +218,12 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="admin">
-    <aside class="sidebar">
+    <aside class="sidebar" :class="{ open: panelOpen }">
+      <button class="drawer-handle" @click="panelOpen = !panelOpen">
+        <span class="handle-bar"></span>
+        <span>{{ panelOpen ? '收起面板' : '围栏管理 · ' + fences.length + ' 个' }}</span>
+        <span class="handle-arrow">{{ panelOpen ? '▼' : '▲' }}</span>
+      </button>
       <div class="head">
         <h2>电子围栏管理</h2>
         <router-link to="/">返回首页</router-link>
@@ -479,5 +488,68 @@ onBeforeUnmount(() => {
 .map {
   flex: 1;
   min-width: 0;
+}
+
+/* 抽屉把手：桌面端隐藏，移动端显示 */
+.drawer-handle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  flex-shrink: 0;
+  width: 100%;
+  background: #f6f8fb;
+  border-bottom: 1px solid #e5e5e5;
+  border-radius: 14px 14px 0 0;
+  font-size: 13px;
+  color: #1a3a6b;
+  cursor: pointer;
+}
+
+.handle-bar {
+  width: 36px;
+  height: 4px;
+  border-radius: 2px;
+  background: #c6cdd8;
+}
+
+/* 移动端：侧边栏变底部抽屉，地图全屏 */
+@media (max-width: 768px) {
+  .admin {
+    position: relative;
+  }
+
+  .map {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  .sidebar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    width: 100%;
+    height: 62vh;
+    max-height: 72vh;
+    padding-top: 0;
+    border-right: none;
+    border-top: 1px solid #e5e5e5;
+    border-radius: 14px 14px 0 0;
+    box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(calc(100% - 44px));
+    transition: transform 0.28s ease;
+  }
+
+  .sidebar.open {
+    transform: translateY(0);
+  }
+
+  .drawer-handle {
+    display: flex;
+  }
 }
 </style>
